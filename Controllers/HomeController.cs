@@ -200,6 +200,13 @@ namespace WebApplication1.Controllers
         }
         public IActionResult ExChange()
         {
+            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+            string kursEURtoPLN = fx.Latest("EUR", "PLN");
+            ViewData["kursEURtoPLN"] = kursEURtoPLN;
+
+            string kursPLNtoEUR = fx.Latest("PLN", "EUR");
+            ViewData["kursPLNtoEUR"] = kursPLNtoEUR;
+
             return View();
         }
 
