@@ -1,0 +1,178 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 10px;
+}
+.gora {
+    display: flex;
+}
+.headermoj1 {
+    width: 60%;
+}
+.headermoj2 {
+    width: 20%;
+}
+.container-fluid,
+.form {
+
+    text-align: center;
+}
+
+
+.saldoplndiv,
+.saldoeurdiv {
+    font-size: 20px;
+    text-align: right;
+    margin-top: 8px;
+    margin-right: 80px;
+}
+
+
+.navbar {
+    display: block;
+}
+
+.navbar-brand {
+   font-size: 35px;
+}
+.navbar-brand-form {
+    font-size: 23px;
+    text-decoration: none;
+    color: black;
+    padding: 13px;
+}
+.navbar-brand-form-second {
+    font-size: 19px;
+    text-decoration: none;
+    color: black;
+    padding: 13px;
+}
+
+.containerindex {
+    height: 100%;
+    max-height: 620px;
+    overflow-y: auto;
+}
+
+table.center {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-collapse: collapse; 
+
+}
+
+
+
+ .names {
+        height: 10%;
+    }
+
+th, td {
+    border: 1px solid black; 
+    width: 20%;
+}
+
+.kwota {
+   
+    border: none;
+    border-right: 1px solid black;
+    margin: 0px;
+}
+
+.rzecz {
+    border: none;
+    padding: 0px;
+    
+}
+.inner-table td {
+    height: 10px;
+}
+
+h1, h2 {
+   text-align: center;
+   padding: 20px;
+}
+
+.przelewwychodzacy {
+    color: red;
+    border: none;
+    border-right: 1px solid black;
+    margin: 0px;
+}
+
+.przelewprzychodzacy {
+    color: rgb(77, 232, 33);
+    border: none;
+    border-right: 1px solid black;
+    margin: 0px;
+}
+
+.test {
+    width: 100%;
+}
+.lewy,
+.prawy {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    text-align: center; /* Wyœrodkowanie zawartoœci formularza */
+
+}
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column; /* Ustawienie elementów w kolumnie */
+    align-items: center; /* Wyœrodkowanie elementów w kolumnie */
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px; /* Dodatkowy odstêp miêdzy etykietami */
+}
+.radio {
+    display: flex;
+    align-items: center;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+input[type="text"],
+select {
+    width: 100%;
+    padding: 8px;
+}
+
+input[type="submit"] {
+    width: auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+  background-color: #0056b3;
+}

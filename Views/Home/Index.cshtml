@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewData["Title"] = "Strona główna";
+}
+@using System.Data
+@model System.Data.DataTable
+@{
+    var przelewyData = ViewData["PrzelewyData"] as DataTable;
+    var jedzenieData = ViewData["JedzenieData"] as DataTable;
+    var zdrowieData = ViewData["ZdrowieData"] as DataTable;
+    var zachciankaData = ViewData["ZachciankaData"] as DataTable;
+    var saldoData = ViewData["SaldoData"] as DataTable;
+    
+}
+
+@{
+    var maksymalnailosc = Math.Max(Math.Max(Math.Max(przelewyData.Rows.Count, jedzenieData.Rows.Count), zdrowieData.Rows.Count), zachciankaData.Rows.Count);
+}
+
+@if(maksymalnailosc == 0)
+{
+        <h1 >Niestety tabela jest pusta</h1>
+        <h2>Dodaj swoją pierwszą transakcję</h2>
+           
+        
+        
+} else
+{
+    
+@if (przelewyData != null || jedzenieData != null || zdrowieData != null || zachciankaData != null)
+{
+            <h3>@ViewData["Waluty"]</h3>
+        <div class="containerindex">
+            <table class="center">
+                <tr class="names">
+                    <th>Przelewy</th>
+                    <th>Jedzenie</th>
+                    <th>Zdrowie</th>
+                    <th>Zachcianki</th>
+                </tr>
+                
+            @for (int i = 0; i < maksymalnailosc; i++)
+            {
+                        <tr>
+                            <td>
+                        @if (i < przelewyData.Rows.Count)
+                        {
+                                    
+
+                                        <table class="inner-table">
+                                            <tr>
+                                        @{
+                                            string walutaprzelewy = przelewyData.Rows[i]["Waluta"].ToString();
+                                            string kierunekprzelewu = przelewyData.Rows[i]["Kierunek"].ToString();
+                                            char znak;
+                                            string suffix;
+                                            if (walutaprzelewy == "1")
+                                            {
+                                                suffix = "Zł";
+                                            }
+                                            else
+                                            {
+                                                suffix = "Eur";
+                                            }
+                                            if(kierunekprzelewu == "1")
+                                            {
+                                                znak = '-';
+                                               <td class="przelewwychodzacy">@znak @przelewyData.Rows[i]["Cena"] @suffix</td>
+                                            } else
+                                            {
+                                                znak = '+';
+                                               <td class="przelewprzychodzacy">@znak @przelewyData.Rows[i]["Cena"] @suffix</td>
+                                            }
+
+                                        }
+
+                                                <td class="rzecz">@przelewyData.Rows[i]["Nazwa"]</td>
+                                            </tr>
+                                        </table>
+                        }
+                            </td>
+
+                            <td>
+                        @if (i < jedzenieData.Rows.Count)
+                        {
+                                <table class="inner-table">
+                                    <tr>
+                                        @{
+                                            string walutafood = jedzenieData.Rows[i]["Waluta"].ToString();
+                                            string suffix;
+                                            if (walutafood == "1")
+                                            {
+                                                suffix = "Zł";
+                                            } else
+                                            {
+                                                suffix = "Eur";
+                                            }
+                                        }
+                                                <td class="kwota">- @jedzenieData.Rows[i]["Cena"] @suffix</td>
+                                                <td class="rzecz">@jedzenieData.Rows[i]["Nazwa"]</td>
+                                            </tr>
+                                        </table>
+                        }
+                            </td>
+                            <td>
+                        @if(i < zdrowieData.Rows.Count)
+                        {
+
+
+
+                            <table class="inner-table">
+                                <tr>
+                                        @{
+                                            string walutazdrowie = zdrowieData.Rows[i]["Waluta"].ToString();
+                                            string suffix;
+                                            if (walutazdrowie == "1")
+                                            {
+                                                suffix = "Zł";
+                                            }
+                                            else
+                                            {
+                                                suffix = "Eur";
+                                            }
+                                        }
+                                    <td class="kwota">- @zdrowieData.Rows[i]["Cena"] @suffix</td>
+                                    <td class="rzecz">@zdrowieData.Rows[i]["Nazwa"]</td>
+                                </tr>
+                            </table>
+
+
+                        }
+                    </td>
+                        <td>
+                        @if(i < zachciankaData.Rows.Count)
+                        {
+                                        <table class="inner-table">
+                                            <tr>
+                                        @{
+                                            string walutazachcianka = zachciankaData.Rows[i]["Waluta"].ToString();
+                                            string suffix;
+                                            if (walutazachcianka == "1")
+                                            {
+                                                suffix = "Zł";
+                                            }
+                                            else
+                                            {
+                                                suffix = "Eur";
+                                            }
+                                        }
+                                                <td class="kwota">- @zachciankaData.Rows[i]["Cena"] @suffix</td>
+                                                <td class="rzecz">@zachciankaData.Rows[i]["Nazwa"]</td>
+                                            </tr>
+                                        </table>
+                        }
+                    </td>
+                            
+                        </tr>
+            }
+            </table>
+        </div>
+} 
+
+
+}
+
+

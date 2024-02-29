@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Formularz";
+}
+@using System.Data
+@model FormData
+@{
+    var saldoData = ViewData["SaldoData"] as DataTable;
+    int RowCount = saldoData.Rows.Count;
+
+}
+
+    @if (RowCount == 0)
+    {
+        
+            <div class="test">
+             <fieldset class="prawy">
+                 <form class="form-horizontal-first" method="post" action="@Url.Action("AddSaldoTransaction","Home")">
+        <legend>Dodaj swoje saldo PLN i EUR <br/>
+         <a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a></legend>
+        <!-- Saldo PLN-->
+        <div class="form-group">
+                <label class="control-label" for="PLNSaldo">Saldo PLN</label>  
+                <div class="">
+                    <input id="PLNSaldo" name="PLN" type="text" placeholder="" class="input-md" required="">
+
+                </div>
+        </div>
+        <!-- Saldo EURO-->
+        <div class="form-group">
+                <label class="control-label" for="EUROSaldo">Saldo EURO</label>  
+                <div>
+                    <input id="EUROSaldo" name="EURO" type="text" placeholder="" class="input-md" required="">
+                   
+                </div>
+        </div>
+            <input type="submit" value="Wyślij">
+                </form>
+        </fieldset>
+        </div>
+    } else
+    {
+<div class="test">
+<fieldset class="lewy">
+
+    <form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Home")">
+<legend>Dodaj transakcje</legend>
+
+<!-- Nazwa-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Name">Nazwa</label>  
+  <div class="col-md-4">
+  <input id="Name" name="Name" type="text" placeholder="Za co" class="form-control input-md" required="">
+
+  </div>
+</div>
+
+<!-- Cena-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Price">Cena</label>  
+  <div class="col-md-4">
+  <input id="Price" name="Price" type="text" placeholder="" class="form-control input-md" required="">
+
+  </div>
+</div>
+
+<!-- Waluta -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Currency">Waluta</label>
+  <div class="col-md-4">
+  <div class="radio">
+    <label for="Currency-0">
+      <input type="radio" name="Currency" id="Currency-0" value="1" checked="checked">
+      PLN
+    </label>
+    </div>
+  <div class="radio">
+    <label for="Currency-1">
+      <input type="radio" name="Currency" id="Currency-1" value="2">
+      EUR
+    </label>
+    </div>
+  </div>
+</div>
+
+<!-- Kategoria transakcji -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Category">Kategoria</label>
+  <div class="col-md-4">
+    <select id="Category" name="Category" class="form-control">
+      <option value="1">Przelewy</option>
+      <option value="2" selected="selected">Jedzenie</option>
+      <option value="3">Zdrowie</option>
+      <option value="4">Zachcianki</option>
+    </select>
+  </div>
+</div>
+
+           
+<script>
+    
+    function manageVisibility() {
+        var categorySelect = document.getElementById("Category");
+        var directionDiv = document.getElementById("directionDiv");
+
+        
+        if (categorySelect.value === "1") {
+            
+            directionDiv.style.display = "block";
+        } else {
+            
+            directionDiv.style.display = "none";
+        }
+    }
+
+    
+    document.getElementById("Category").addEventListener("change", manageVisibility);
+
+    
+    manageVisibility();
+</script>
+
+
+                <!-- Kierunek przelewu -->
+                <div  id="directionDiv" class="form-group" style="display: none;">
+                    <label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label for="Who-0">
+                                <input type="radio" name="Who" id="Who-0" value="1" checked="checked">
+                                Wychodzący
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label for="Who-1">
+                                <input type="radio" name="Who" id="Who-1" value="2">
+                                Przychodzący
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            
+            <input type="submit" value="Wyślij">
+
+            </form>    
+</fieldset>
+</div>
+}
+
+
+
