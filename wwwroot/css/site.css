@@ -128,14 +128,17 @@ h1, h2 {
 .test {
     width: 100%;
 }
+.testexchange {
+    width: 100%;
+    margin-top: 40px;
+}
 .lewy,
 .prawy {
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 20px;
+    padding: 12px;
     background-color: #f9f9f9;
     text-align: center; /* Wyœrodkowanie zawartoœci formularza */
-
 }
 .form-group {
     margin-bottom: 15px;
@@ -175,4 +178,19 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
   background-color: #0056b3;
+}
+.Przelicznik {
+   text-align: center;
+}
+.guzik {
+    align-content: center;
+    margin-top: 4px;
+}
+
+.col-md-4 {
+    text-align: center;
+}
+.WymianaEP {
+    text-align: center;
+    font-size: 28px
 }

@@ -1,25 +1,44 @@
-﻿   <div class="test">
-             <fieldset class="prawy">
-                 <form class="form-horizontal-first" method="post" action="@Url.Action("AddSaldoTransaction","Home")">
-        <legend>Dodaj swoje saldo PLN i EUR <br/>
-         <a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a></legend>
-        <!-- Saldo PLN-->
-        <div class="form-group">
-                <label class="control-label" for="PLNSaldo">Saldo PLN</label>  
-                <div class="">
-                    <input id="PLNSaldo" name="PLN" type="text" placeholder="" class="input-md" required="">
+﻿@{
+    ViewData["Title"] = "Wymiana";
+}
+<div class="testexchange">
+       <form class="form-horizontal">
+    <fieldset>
 
-                </div>
-        </div>
-        <!-- Saldo EURO-->
-        <div class="form-group">
-                <label class="control-label" for="EUROSaldo">Saldo EURO</label>  
-                <div>
-                    <input id="EUROSaldo" name="EURO" type="text" placeholder="" class="input-md" required="">
+    <!-- Form Name -->
+    <legend class="WymianaEP">Wymiana PLN i EUR</legend>
 
-                </div>
-        </div>
-            <input type="submit" value="Wyślij">
-                </form>
-        </fieldset>
-        </div>
+    <!-- Select Basic -->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="SelectWho">Wymiana</label>
+      <div class="col-md-4">
+        <select id="SelectWho" name="SelectWho" class="form-control">
+          <option value="1">EUR -&gt; PLN</option>
+          <option value="2">PLN -&gt; EUR</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Text input-->
+    <div class="form-group">
+      <label class="col-md-4 control-label" for="Amount">Ilość EUR</label>  
+      <div class="col-md-4">
+      <input id="Amount" name="Amount" type="text" placeholder="€€€" class="form-control input-md" required="">
+
+      </div>
+    </div>
+
+    <!-- Button -->
+    <div class="form-group">
+      <div class="col-md-4">
+          <div class="Przelicznik">
+              Kurs: {KursEUR->PLN lub KursPLN->EUR} <br/>
+              {IloscEur} da Ci {IloscPLN} Zł. <br/>
+          </div>
+         <input class="guzik" type="submit" value="Wyślij">
+      </div>
+    </div>
+
+    </fieldset>
+    </form>
+</div>

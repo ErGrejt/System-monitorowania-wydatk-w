@@ -7,39 +7,45 @@
     decimal majatek = 0;
     string kursEuroString = "";
     string result = "";
-    if (saldoData.Rows.Count > 0 && ViewData["SaldoData"] != null && ViewData["wydatkizachcianki"] != null && ViewData["wydatkijedzenie"] 
-    != null && ViewData["wydatkizdrowie"] != null && ViewData["wydatkizdrowieeur"] != null && ViewData["wydatkijedzenieeur"]
-    != null && ViewData["wydatkizachciankieur"] != null && ViewData["przelewwychodzacyzl"] != null && ViewData["przelewprzychodzacyzl"] != null
-    && ViewData["przelewwychodzacyeuro"] != null && ViewData["przelewprzychodzacyeuro"] != null)
+
+    if (ViewContext.RouteData.Values["action"].ToString() != "ExChange")
     {
 
-        decimal saldo = (decimal)saldoData.Rows[0]["PLN"];
-        decimal saldoeur = (decimal)saldoData.Rows[0]["EURO"];
-        decimal wydatkizachcianki = (decimal)ViewData["wydatkizachcianki"];
-        decimal wydatkijedzenie = (decimal)ViewData["wydatkijedzenie"];
-        decimal wydatkizdrowie = (decimal)ViewData["wydatkizdrowie"];
 
-        decimal wydatkizachciankieur = (decimal)ViewData["wydatkizachciankieur"];
-        decimal wydatkijedzenieeur = (decimal)ViewData["wydatkijedzenieeur"];
-        decimal wydatkizdrowieeur = (decimal)ViewData["wydatkizdrowieeur"];
-        string kursEuroStringAll = (string)ViewData["KursEuro"];
-        kursEuroString = kursEuroStringAll.Substring(15,12);
-        kursEuroString = kursEuroString.Remove(1, 1).Insert(1, ",").Remove(4,8);
+        if (saldoData.Rows.Count > 0 && ViewData["SaldoData"] != null && ViewData["wydatkizachcianki"] != null && ViewData["wydatkijedzenie"]
+        != null && ViewData["wydatkizdrowie"] != null && ViewData["wydatkizdrowieeur"] != null && ViewData["wydatkijedzenieeur"]
+        != null && ViewData["wydatkizachciankieur"] != null && ViewData["przelewwychodzacyzl"] != null && ViewData["przelewprzychodzacyzl"] != null
+        && ViewData["przelewwychodzacyeuro"] != null && ViewData["przelewprzychodzacyeuro"] != null)
+        {
+
+            decimal saldo = (decimal)saldoData.Rows[0]["PLN"];
+            decimal saldoeur = (decimal)saldoData.Rows[0]["EURO"];
+            decimal wydatkizachcianki = (decimal)ViewData["wydatkizachcianki"];
+            decimal wydatkijedzenie = (decimal)ViewData["wydatkijedzenie"];
+            decimal wydatkizdrowie = (decimal)ViewData["wydatkizdrowie"];
+
+            decimal wydatkizachciankieur = (decimal)ViewData["wydatkizachciankieur"];
+            decimal wydatkijedzenieeur = (decimal)ViewData["wydatkijedzenieeur"];
+            decimal wydatkizdrowieeur = (decimal)ViewData["wydatkizdrowieeur"];
+            string kursEuroStringAll = (string)ViewData["KursEuro"];
+            kursEuroString = kursEuroStringAll.Substring(15, 12);
+            kursEuroString = kursEuroString.Remove(1, 1).Insert(1, ",").Remove(4, 8);
 
 
-        decimal kursEuro = Convert.ToDecimal(kursEuroString);
+            decimal kursEuro = Convert.ToDecimal(kursEuroString);
 
-        //Przelewy
-        decimal przelewywychodzacezl = (decimal)ViewData["przelewwychodzacyzl"];
-        decimal przelewprzychodzacyzl = (decimal)ViewData["przelewprzychodzacyzl"];
-        decimal przelewywychodzaceeuro = (decimal)ViewData["przelewwychodzacyeuro"];
-        decimal przelewprzychodzacyeuro = (decimal)ViewData["przelewprzychodzacyeuro"];
-        ostatecznesaldo = saldo - wydatkizachcianki - wydatkijedzenie - wydatkizdrowie + przelewprzychodzacyzl - przelewywychodzacezl;
-        ostatecznesaldoeur = saldoeur - wydatkizachciankieur - wydatkijedzenieeur
-        - wydatkizdrowieeur + przelewprzychodzacyeuro - przelewywychodzaceeuro;
+            //Przelewy
+            decimal przelewywychodzacezl = (decimal)ViewData["przelewwychodzacyzl"];
+            decimal przelewprzychodzacyzl = (decimal)ViewData["przelewprzychodzacyzl"];
+            decimal przelewywychodzaceeuro = (decimal)ViewData["przelewwychodzacyeuro"];
+            decimal przelewprzychodzacyeuro = (decimal)ViewData["przelewprzychodzacyeuro"];
+            ostatecznesaldo = saldo - wydatkizachcianki - wydatkijedzenie - wydatkizdrowie + przelewprzychodzacyzl - przelewywychodzacezl;
+            ostatecznesaldoeur = saldoeur - wydatkizachciankieur - wydatkijedzenieeur
+            - wydatkizdrowieeur + przelewprzychodzacyeuro - przelewywychodzaceeuro;
 
-        majatek = ostatecznesaldo + ostatecznesaldoeur * kursEuro;
-        result = majatek.ToString("0.00");
+            majatek = ostatecznesaldo + ostatecznesaldoeur * kursEuro;
+            result = majatek.ToString("0.00");
+        }
     }
 }
 
