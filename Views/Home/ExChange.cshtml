@@ -14,7 +14,6 @@
     string plntoeurliczba = plntoeurstring.Substring(15, 12);
     plntoeurliczba = plntoeurliczba.Remove(1, 1).Insert(1, ",").Remove(4, 8);
     decimal plntoeur = Convert.ToDecimal(plntoeurliczba);
-
 }
 <script>
     const EurToPln = @Json.Serialize(eurtopln);

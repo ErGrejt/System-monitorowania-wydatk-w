@@ -56,7 +56,11 @@
 
 <!-- Cena-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="Price">Cena</label>  
+
+
+  <label id="CenaID" class="col-md-4 control-label" for="Price">Cena</label>
+   <label id="KwotaID" class="col-md-4 control-label" for="Price">Kwota przelewu</label> 
+   
   <div class="col-md-4">
   <input id="Price" name="Price" type="text" placeholder="" class="form-control input-md" required="">
 
@@ -101,13 +105,16 @@
     function manageVisibility() {
         var categorySelect = document.getElementById("Category");
         var directionDiv = document.getElementById("directionDiv");
-
+        var cena = document.getElementById('CenaID');
+        var kwota = document.getElementById('KwotaID');
         
         if (categorySelect.value === "1") {
-            
+            cena.style.display = "none";
+            kwota.style.display = "block";
             directionDiv.style.display = "block";
         } else {
-            
+            cena.style.display = "block";
+            kwota.style.display = "none";
             directionDiv.style.display = "none";
         }
     }
@@ -118,6 +125,7 @@
     
     manageVisibility();
 </script>
+
 
 
                 <!-- Kierunek przelewu -->
