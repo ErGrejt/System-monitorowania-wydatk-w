@@ -27,9 +27,8 @@
             decimal wydatkizachciankieur = (decimal)ViewData["wydatkizachciankieur"];
             decimal wydatkijedzenieeur = (decimal)ViewData["wydatkijedzenieeur"];
             decimal wydatkizdrowieeur = (decimal)ViewData["wydatkizdrowieeur"];
-            string kursEuroStringAll = (string)ViewData["KursEuro"];
-            kursEuroString = kursEuroStringAll.Substring(15, 12);
-            kursEuroString = kursEuroString.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+            kursEuroString = (string)ViewData["KursEuro"];
+
 
 
             decimal kursEuro = Convert.ToDecimal(kursEuroString);
@@ -47,7 +46,7 @@
             result = majatek.ToString("0.00");
         }
     }
-}
+} 
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -93,8 +92,8 @@
                     }
                 </div>
                 <div class="headermoj2">
-                @if (ViewContext.RouteData.Values["action"].ToString() != "Form" && (saldoData != null && saldoData.Rows.Count > 0))
-                {
+                    @if (ViewContext.RouteData.Values["action"].ToString() != "Form" && (saldoData != null && saldoData.Rows.Count > 0))
+                    {
                     
                                     <div class="saldoplndiv">Saldo: @ostatecznesaldo Zł</div>
                                 <div class="saldoeurdiv">Saldo: @ostatecznesaldoeur €</div>

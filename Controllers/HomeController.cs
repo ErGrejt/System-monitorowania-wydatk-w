@@ -59,9 +59,40 @@ namespace WebApplication1.Controllers
             AddSaldo(model);
             return RedirectToAction("Form", "Home");
         }
+        [HttpPost]
+        public IActionResult DodajWymianeEur(string AmountEur) 
+        {
+            decimal numer = Convert.ToDecimal(AmountEur);
+            //Pobieranie wartoœci euro
+            //Klucz freecurrency
+            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+            //Wyci¹ganie kursu eur -> pln
+            string kursEURtoPLN = fx.Latest("EUR", "PLN");
+            kursEURtoPLN = kursEURtoPLN.Substring(15, 12);
+            kursEURtoPLN = kursEURtoPLN.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+            decimal kurseuro = Convert.ToDecimal(kursEURtoPLN);
+            decimal amountPLN = numer * kurseuro;
+            AddPrzelewEurToPln(numer, amountPLN);
 
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public IActionResult DodajWymianePln(string AmountPLN)
+        {
+            decimal numer = Convert.ToDecimal(AmountPLN);
+            //Pobieranie wartoœci euro
+            //Klucz freecurrency
+            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+            //Wyci¹ganie kursu eur -> pln
+            string kursPlnToEur = fx.Latest("PLN", "");
+            kursPlnToEur = kursPlnToEur.Substring(15, 12);
+            kursPlnToEur = kursPlnToEur.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+            decimal kurspln = Convert.ToDecimal(kursPlnToEur);
+            decimal amountEUR = numer * kurspln;
+            AddPrzelewPlnToEur(numer, amountEUR);
 
-
+            return RedirectToAction("Index", "Home");
+        }
         public IActionResult Index()
         {
             string connectionString = "Server=localhost;Database=System monitorowania wydatków;User=root;Password=;";
@@ -175,7 +206,9 @@ namespace WebApplication1.Controllers
             //Pobieranie wartoœci EUR do PLN z freecurrencyApi
             var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
             string waluty = fx.Latest("EUR", "PLN");
-            ViewData["KursEuro"] = waluty;
+            waluty = waluty.Substring(15, 12);
+            waluty = waluty.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+            ViewData["kursEuro"] = waluty;
 
 
             return View();
@@ -200,12 +233,20 @@ namespace WebApplication1.Controllers
         }
         public IActionResult ExChange()
         {
+            //Klucz freecurrency
             var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+            //Wyci¹ganie kursu eur -> pln
             string kursEURtoPLN = fx.Latest("EUR", "PLN");
+            kursEURtoPLN = kursEURtoPLN.Substring(15, 12);
+            kursEURtoPLN = kursEURtoPLN.Remove(1, 1).Insert(1, ",").Remove(4, 8);
             ViewData["kursEURtoPLN"] = kursEURtoPLN;
-
+            //Wyci¹ganie kursu pln -> eur
             string kursPLNtoEUR = fx.Latest("PLN", "EUR");
+            kursPLNtoEUR = kursPLNtoEUR.Substring(15, 12);
+            kursPLNtoEUR = kursPLNtoEUR.Remove(1, 1).Insert(1, ",").Remove(4, 8);
             ViewData["kursPLNtoEUR"] = kursPLNtoEUR;
+
+
 
             return View();
         }
@@ -217,6 +258,56 @@ namespace WebApplication1.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+
+
+        public IActionResult AddPrzelewEurToPln(decimal euramount, decimal plnafterexchange)
+        {
+            Przelewy newPrzelewWymianaEurMinus = new Przelewy
+            {
+                Nazwa = "Wymiana Eur->Pln",
+                Cena = euramount,
+                Waluta = 2,
+                Kierunek = 1
+            };
+            Przelewy newPrzelewWymianaPlnPlus = new Przelewy
+            {
+                Nazwa = "Wymiana Eur->Pln",
+                Cena = plnafterexchange,
+                Waluta = 1,
+                Kierunek = 2
+            };
+            _context.Przelewy.Add(newPrzelewWymianaEurMinus);
+            _context.SaveChanges();
+            _context.Przelewy.Add(newPrzelewWymianaPlnPlus);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index", "Home");
+        }
+        public IActionResult AddPrzelewPlnToEur(decimal plnamount, decimal eurafterexchange)
+        {
+            Przelewy newPrzelewWymianaPlnMinus = new Przelewy
+            {
+                Nazwa = "Wymiana Pln->Eur",
+                Cena = plnamount,
+                Waluta = 1,
+                Kierunek = 1
+            };
+            Przelewy newPrzelewWymianaEurPlus = new Przelewy
+            {
+                Nazwa = "Wymiana Pln->Eur",
+                Cena = eurafterexchange,
+                Waluta = 2,
+                Kierunek = 2
+            };
+            _context.Przelewy.Add(newPrzelewWymianaPlnMinus);
+            _context.SaveChanges();
+            _context.Przelewy.Add(newPrzelewWymianaEurPlus);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index", "Home");
+        }
         [HttpPost]
         //Dodanie do tabeli Jedzenie
         public IActionResult AddFood(FormData model)
