@@ -13,79 +13,80 @@
     const EurToPln = @Json.Serialize(eurtopln);
     const PlnToEur = @Json.Serialize(plntoeur);
 </script>
-
-<div class="testexchange">
+<div class="prawy">
+    <div class="testexchange">
       
 
-    <!-- Form Name -->
-    <legend class="WymianaEP">Wymiana PLN i EUR</legend>
+        <!-- Form Name -->
+        <legend class="WymianaEP">Wymiana PLN i EUR</legend>
 
-    <!-- Select Basic -->
-    <div class="form-group">
-      <label class="col-md-4 control-label" for="SelectWho">Wymiana</label>
-      <div class="col-md-4">
-        <select id="SelectWho" name="SelectWho" class="form-control">
-          <option value="1" selected>EUR -&gt; PLN</option>
-          <option value="2">PLN -&gt; EUR</option>
-        </select>
-      </div>
-    </div>
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="SelectWho">Wymiana</label>
+          <div class="col-md-4">
+            <select id="SelectWho" name="SelectWho" class="form-control">
+              <option value="1" selected>EUR -&gt; PLN</option>
+              <option value="2">PLN -&gt; EUR</option>
+            </select>
+          </div>
+        </div>
 
 
-  <!-- Formularz dla EURO -> PLN -->
-   <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianeEur","Function")">
-    <fieldset>
-<div id="EURPLN">
-    <!-- Text input-->
-    <div class="form-group">
-              <div class="col-md-4">
-                  <label class="col-md-4 control-label" for="AmountEur">Ilość EUR</label>  
-                    <input id="AmountEur" name="AmountEur" type="text" placeholder="€€€" class="form-control input-md" required="">
-             </div>
-              <div class="Przelicznik">
-                  Kurs: @eurtopln <br/>
-                  <span id="eurilosc"></span>€ da Ci <span id="eurspan"></span> Zł <br/>
-              </div>
-       
-    </div>
-
-    <!-- Button -->
-    <div class="form-group">
-      <div class="col-md-4">
-         
-         <input class="guzik1" type="submit" value="Wymień">
-      </div>
-    </div>
-</div>
- </fieldset>
- </form>
- <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianePln","Function")">
-    <fieldset>
-    <!-- Formularz dla PLN -> EURO -->
-       <div id="PLNEUR">
+      <!-- Formularz dla EURO -> PLN -->
+       <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianeEur","Function")">
+        <fieldset>
+    <div id="EURPLN">
         <!-- Text input-->
         <div class="form-group">
-          <label class="col-md-4 control-label" for="AmountPLN">Ilość PLN</label>  
-          <div class="col-md-4">
-          <input id="AmountPLN" name="AmountPLN" type="text" class="form-control input-md" required="">
-
-          </div>
+                  <div class="col-md-4">
+                      <label class="col-md-4 control-label" for="AmountEur">Ilość EUR</label>  
+                        <input id="AmountEur" name="AmountEur" type="text" placeholder="€€€" class="form-control input-md" required="">
+                 </div>
+                  <div class="Przelicznik">
+                      Kurs: @eurtopln <br/>
+                      <span id="eurilosc"></span>€ da Ci <span id="eurspan"></span> Zł <br/>
+                  </div>
+       
         </div>
 
         <!-- Button -->
         <div class="form-group">
           <div class="col-md-4">
-              <div class="Przelicznik">
-                  Kurs: @plntoeur <br/>
-                  <span id="plnilosc"></span> Zł da Ci <span id="plnspan"></span>€  <br/>
-              </div>
-              <input class="guzik2" type="submit" value="Wymień">
-      </div>
+         
+             <input class="guzik1" type="submit" value="Wymień">
+          </div>
+        </div>
     </div>
+     </fieldset>
+     </form>
+     <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianePln","Function")">
+        <fieldset>
+        <!-- Formularz dla PLN -> EURO -->
+           <div id="PLNEUR">
+            <!-- Text input-->
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="AmountPLN">Ilość PLN</label>  
+              <div class="col-md-4">
+              <input id="AmountPLN" name="AmountPLN" type="text" class="form-control input-md" required="">
 
-</div>
-    </fieldset>
-    </form>
+              </div>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+              <div class="col-md-4">
+                  <div class="Przelicznik">
+                      Kurs: @plntoeur <br/>
+                      <span id="plnilosc"></span> Zł da Ci <span id="plnspan"></span>€  <br/>
+                  </div>
+                  <input class="guzik2" type="submit" value="Wymień">
+          </div>
+        </div>
+
+    </div>
+        </fieldset>
+        </form>
+    </div>
 </div>
 <!-- To pozniej zrobić zeby znikało ładnie-->
 <script>

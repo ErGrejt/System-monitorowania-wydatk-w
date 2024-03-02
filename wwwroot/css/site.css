@@ -124,14 +124,15 @@ h1, h2 {
     border-right: 1px solid black;
     margin: 0px;
 }
-
-.test {
-    width: 100%;
-}
 .testexchange {
     width: 100%;
     margin-top: 40px;
 }
+/* Tutaj Form*/
+.test {
+    width: 100%;
+}
+
 .lewy,
 .prawy {
     border: 1px solid #ccc;
@@ -186,6 +187,20 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: #0056b3;
 }
+.testform {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+}
+.formbutton {
+    margin-top: 16px;
+}
+/* Koniec Form*/
 .Przelicznik {
    text-align: center;
 }
@@ -203,7 +218,9 @@ input[type="submit"]:hover {
 }
 .WymianaEP {
     text-align: center;
-    font-size: 28px
+    font-size: 28px;
+    margin-bottom: 15px;
+    margin-top: -30px;
 }
 .Wymiana {
     display: flex;

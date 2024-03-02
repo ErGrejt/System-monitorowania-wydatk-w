@@ -99,35 +99,7 @@
   </div>
 </div>
 
-           
-<script>
-    
-    function manageVisibility() {
-        var categorySelect = document.getElementById("Category");
-        var directionDiv = document.getElementById("directionDiv");
-        var cena = document.getElementById('CenaID');
-        var kwota = document.getElementById('KwotaID');
-        
-        if (categorySelect.value === "1") {
-            cena.style.display = "none";
-            kwota.style.display = "block";
-            directionDiv.style.display = "block";
-        } else {
-            cena.style.display = "block";
-            kwota.style.display = "none";
-            directionDiv.style.display = "none";
-        }
-    }
-
-    
-    document.getElementById("Category").addEventListener("change", manageVisibility);
-
-    
-    manageVisibility();
-</script>
-
-
-
+ 
                 <!-- Kierunek przelewu -->
      <div id="directionDiv" class="form-group">
               <label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
@@ -148,12 +120,37 @@
   </div>
 
             
-            <input type="submit" value="Wyślij">
+            <input class="formbutton"type="submit" value="Wyślij">
 
             </form>    
 </fieldset>
 </div>
 }
+<script>
+
+    function manageVisibility() {
+        var categorySelect = document.getElementById("Category");
+        var directionDiv = document.getElementById("directionDiv");
+        var cena = document.getElementById('CenaID');
+        var kwota = document.getElementById('KwotaID');
+
+        if (categorySelect.value == "1") {
+            cena.classList.add("testform");
+            kwota.classList.remove("testform");
+            directionDiv.classList.remove("testform");
+        } else {
+            cena.classList.remove("testform");
+            kwota.classList.add("testform");
+            directionDiv.classList.add("testform");
+        }
+    }
+
+
+    document.getElementById("Category").addEventListener("change", manageVisibility);
+
+
+    manageVisibility();
+</script>
 
 
 
