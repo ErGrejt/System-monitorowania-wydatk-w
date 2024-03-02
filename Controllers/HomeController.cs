@@ -3,203 +3,94 @@ using System.Diagnostics;
 using WebApplication1.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
+using WebApplication1.Controllers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Net.Http;
 using System.Text.Json;
 using freecurrencyapi;
 using freecurrencyapi.Helpers;
 
-
-
 namespace WebApplication1.Controllers
 {
-    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
-
+        
         public HomeController(AppDbContext context, ILogger<HomeController> logger)
         {
             _context = context;
             _logger = logger;
-            
         }
-
-          
-        
-
-
-        //Baza danych?
-        [HttpPost]
-        public IActionResult AddTransaction(FormData model)
+        public DataTable Queries(MySqlConnection connection, string query)
         {
-            
-            if (ModelState.IsValid)
+            MySqlCommand command = new MySqlCommand(query, connection);
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                if(model.Category == 1)
-                {
-                    AddPrzelew(model);
-                } else if(model.Category == 2)
-                {
-                    AddFood(model);
-                } else if(model.Category == 3)
-                {
-                    AddHealth(model);
-                } else if(model.Category == 4)
-                {
-                    AddZach(model);
-                } 
+                DataTable Table = new DataTable();
+                Table.Load(reader);
+                return Table;
             }
-            return RedirectToAction("index","Home");
         }
-        
-        public IActionResult AddSaldoTransaction(FormData model)
+        public decimal Expenses(MySqlConnection connection, string query)
         {
-            AddSaldo(model);
-            return RedirectToAction("Form", "Home");
+            MySqlCommand command = new MySqlCommand(query, connection);
+            decimal SUM = Convert.ToDecimal(command.ExecuteScalar());
+            return SUM;
         }
-        [HttpPost]
-        public IActionResult DodajWymianeEur(string AmountEur) 
-        {
-            decimal numer = Convert.ToDecimal(AmountEur);
-            //Pobieranie wartoœci euro
-            //Klucz freecurrency
-            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-            //Wyci¹ganie kursu eur -> pln
-            string kursEURtoPLN = fx.Latest("EUR", "PLN");
-            kursEURtoPLN = kursEURtoPLN.Substring(15, 12);
-            kursEURtoPLN = kursEURtoPLN.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-            decimal kurseuro = Convert.ToDecimal(kursEURtoPLN);
-            decimal amountPLN = numer * kurseuro;
-            AddPrzelewEurToPln(numer, amountPLN);
 
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        public IActionResult DodajWymianePln(string AmountPLN)
-        {
-            decimal numer = Convert.ToDecimal(AmountPLN);
-            //Pobieranie wartoœci euro
-            //Klucz freecurrency
-            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-            //Wyci¹ganie kursu eur -> pln
-            string kursPlnToEur = fx.Latest("PLN", "");
-            kursPlnToEur = kursPlnToEur.Substring(15, 12);
-            kursPlnToEur = kursPlnToEur.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-            decimal kurspln = Convert.ToDecimal(kursPlnToEur);
-            decimal amountEUR = numer * kurspln;
-            AddPrzelewPlnToEur(numer, amountEUR);
-
-            return RedirectToAction("Index", "Home");
-        }
         public IActionResult Index()
         {
             string connectionString = "Server=localhost;Database=System monitorowania wydatków;User=root;Password=;";
             MySqlConnection connection = new MySqlConnection(connectionString);
-
-           
-
             connection.Open();
+           
             //Zapytanie przelewy
             string queryprzelew = "SELECT * FROM Przelewy";
-            MySqlCommand commandprzelew = new MySqlCommand(queryprzelew, connection);
-            using (MySqlDataReader readerPrzelew = commandprzelew.ExecuteReader())
-            {
-                DataTable przelewTable = new DataTable();
-                przelewTable.Load(readerPrzelew);
-                ViewData["PrzelewyData"] = przelewTable;
-            }
+            ViewData["PrzelewyData"] = Queries(connection, queryprzelew);
             //Zapytanie jedzenie
             string queryfood = "SELECT * FROM jedzenie";
-            MySqlCommand commandfood = new MySqlCommand(queryfood, connection);
-            using (MySqlDataReader readerFood = commandfood.ExecuteReader())
-            {
-                DataTable foodTable = new DataTable();
-                foodTable.Load(readerFood);
-                ViewData["JedzenieData"] = foodTable;
-            }
+            ViewData["JedzenieData"] = Queries(connection, queryfood);
             //Zapytanie zdrowie
             string queryhealth = "SELECT * FROM Zdrowie";
-            MySqlCommand commandhealth = new MySqlCommand(queryhealth, connection);
-            using (MySqlDataReader readerHealth = commandhealth.ExecuteReader())
-            {
-                DataTable healthTable = new DataTable();
-                healthTable.Load(readerHealth);
-                ViewData["ZdrowieData"] = healthTable;
-            }
+            ViewData["ZdrowieData"] = Queries(connection, queryhealth);
             //Zapytanie zachcianki
             string queryzachcianka = "SELECT * FROM Zachcianki";
-            MySqlCommand commandzachcianka = new MySqlCommand(queryzachcianka, connection);
-            using (MySqlDataReader readerZachcianka = commandzachcianka.ExecuteReader())
-            {
-                DataTable ZachciankaTable = new DataTable();
-                ZachciankaTable.Load(readerZachcianka);
-                ViewData["ZachciankaData"] = ZachciankaTable;
-            }
+            ViewData["ZachciankaData"] = Queries(connection, queryzachcianka);
             //Pobierz saldo
             string querysaldo = "SELECT * FROM saldo";
-            MySqlCommand commandsaldo = new MySqlCommand(querysaldo, connection);
-            using (MySqlDataReader readerSaldo = commandsaldo.ExecuteReader())
-            {
-                DataTable saldoTable = new DataTable();
-                saldoTable.Load(readerSaldo);
-                ViewData["SaldoData"] = saldoTable;
-            }
+            ViewData["SaldoData"] = Queries(connection, querysaldo);
             //Zapytania pobieraj¹ce iloœæ wydanych pieniêdzy w z³otówkach z ka¿dej tabeli (poza przelewami)
             //Zachcianki
             string queryobliczaniezachcianki = "SELECT COALESCE(SUM(cena),0) FROM zachcianki WHERE waluta='1'";
-            MySqlCommand comobzachcianki = new MySqlCommand(queryobliczaniezachcianki, connection);
-            decimal sumawydatkowzachcianki = Convert.ToDecimal(comobzachcianki.ExecuteScalar());
-            ViewData["wydatkizachcianki"] = sumawydatkowzachcianki;
+            ViewData["wydatkizachcianki"] = Expenses(connection, queryobliczaniezachcianki);
             //Jedzenie
             string queryobliczaniejedzenie = "SELECT COALESCE(SUM(cena),0) FROM jedzenie WHERE waluta='1'";
-            MySqlCommand comobjedzenie = new MySqlCommand(queryobliczaniejedzenie, connection);
-            decimal sumawydatkowjedzenie = Convert.ToDecimal(comobjedzenie.ExecuteScalar());
-            ViewData["wydatkijedzenie"] = sumawydatkowjedzenie;
+            ViewData["wydatkijedzenie"] = Expenses(connection, queryobliczaniejedzenie);
             //Zdrowie
             string queryobliczaniezdrowie = "SELECT COALESCE(SUM(cena),0) FROM zdrowie WHERE waluta='1'";
-            MySqlCommand comobzdrowie = new MySqlCommand(queryobliczaniezdrowie, connection);
-            decimal sumawydatkowzdrowie = Convert.ToDecimal(comobzdrowie.ExecuteScalar());
-            ViewData["wydatkizdrowie"] = sumawydatkowzdrowie;
-
+            ViewData["wydatkizdrowie"] = Expenses(connection, queryobliczaniezdrowie);
             //Zapytania pobieraj¹ce iloœæ wydanych pieniêdzy w euro z ka¿dej tabeli (poza przelewami)
             string queryobliczaniezachciankieur = "SELECT COALESCE(SUM(cena),0) FROM zachcianki WHERE waluta='2'";
-            MySqlCommand comobzachciankieur = new MySqlCommand(queryobliczaniezachciankieur, connection);
-            decimal sumawydatkowzachciankieur = Convert.ToDecimal(comobzachciankieur.ExecuteScalar());
-            ViewData["wydatkizachciankieur"] = sumawydatkowzachciankieur;
+            ViewData["wydatkizachciankieur"] = Expenses(connection, queryobliczaniezachciankieur);
             //Jedzenie
             string queryobliczaniejedzenieeur = "SELECT COALESCE(SUM(cena),0) FROM jedzenie WHERE waluta='2'";
-            MySqlCommand comobjedzenieeur = new MySqlCommand(queryobliczaniejedzenieeur, connection);
-            decimal sumawydatkowjedzenieeur = Convert.ToDecimal(comobjedzenieeur.ExecuteScalar());
-            ViewData["wydatkijedzenieeur"] = sumawydatkowjedzenieeur;
+            ViewData["wydatkijedzenieeur"] = Expenses(connection, queryobliczaniejedzenieeur);
             //Zdrowie
             string queryobliczaniezdrowieeur = "SELECT COALESCE(SUM(cena),0) FROM zdrowie WHERE waluta='2'";
-            MySqlCommand comobzdrowieeur = new MySqlCommand(queryobliczaniezdrowieeur, connection);
-            decimal sumawydatkowzdrowieeur = Convert.ToDecimal(comobzdrowieeur.ExecuteScalar());
-            ViewData["wydatkizdrowieeur"] = sumawydatkowzdrowieeur;
+            ViewData["wydatkizdrowieeur"] = Expenses(connection, queryobliczaniezdrowieeur); 
             //Przelew wychodz¹cy w z³otówkach
             string queryobliczanieprzelewy1 = "SELECT COALESCE(SUM(cena),0) FROM przelewy WHERE waluta='1' AND Kierunek='1'";
-            MySqlCommand comobprzelewy1 = new MySqlCommand(queryobliczanieprzelewy1 , connection);
-            decimal sumaprzelewowzl = Convert.ToDecimal(comobprzelewy1.ExecuteScalar());
-            ViewData["przelewwychodzacyzl"] = sumaprzelewowzl;
+            ViewData["przelewwychodzacyzl"] = Expenses(connection, queryobliczanieprzelewy1);
             //Przelew przychodz¹cy w z³otówkach
             string queryobliczanieprzelewy2 = "SELECT COALESCE(SUM(cena),0) FROM przelewy WHERE waluta='1' AND Kierunek='2'";
-            MySqlCommand comobprzelewy2 = new MySqlCommand(queryobliczanieprzelewy2, connection);
-            decimal sumaprzelewowzlwych = Convert.ToDecimal(comobprzelewy2.ExecuteScalar());
-            ViewData["przelewprzychodzacyzl"] = sumaprzelewowzlwych;
+            ViewData["przelewprzychodzacyzl"] = Expenses(connection, queryobliczanieprzelewy2);
             //Przelew wychodz¹cy w euro
             string queryobliczanieprzelewy1eur = "SELECT COALESCE(SUM(cena),0) FROM przelewy WHERE waluta='2' AND Kierunek='1'";
-            MySqlCommand comobprzelewy1eur = new MySqlCommand(queryobliczanieprzelewy1eur, connection);
-            decimal sumaprzelewowzleur = Convert.ToDecimal(comobprzelewy1eur.ExecuteScalar());
-            ViewData["przelewwychodzacyeuro"] = sumaprzelewowzleur;
+            ViewData["przelewwychodzacyeuro"] = Expenses(connection, queryobliczanieprzelewy1eur);
             //Przelew przychodz¹cy w euro
             string queryobliczanieprzelewy2eur = "SELECT COALESCE(SUM(cena),0) FROM przelewy WHERE waluta='2' AND Kierunek='2'";
-            MySqlCommand comobprzelewy2eur = new MySqlCommand(queryobliczanieprzelewy2eur, connection);
-            decimal sumaprzelewowzlwycheur = Convert.ToDecimal(comobprzelewy2eur.ExecuteScalar());
-            ViewData["przelewprzychodzacyeuro"] = sumaprzelewowzlwycheur;
-
-            
+            ViewData["przelewprzychodzacyeuro"] = Expenses(connection, queryobliczanieprzelewy2eur);
 
             connection.Close();
 
@@ -209,7 +100,6 @@ namespace WebApplication1.Controllers
             waluty = waluty.Substring(15, 12);
             waluty = waluty.Remove(1, 1).Insert(1, ",").Remove(4, 8);
             ViewData["kursEuro"] = waluty;
-
 
             return View();
         }
@@ -246,168 +136,13 @@ namespace WebApplication1.Controllers
             kursPLNtoEUR = kursPLNtoEUR.Remove(1, 1).Insert(1, ",").Remove(4, 8);
             ViewData["kursPLNtoEUR"] = kursPLNtoEUR;
 
-
-
             return View();
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-
-
-        public IActionResult AddPrzelewEurToPln(decimal euramount, decimal plnafterexchange)
-        {
-            Przelewy newPrzelewWymianaEurMinus = new Przelewy
-            {
-                Nazwa = "Wymiana Eur->Pln",
-                Cena = euramount,
-                Waluta = 2,
-                Kierunek = 1
-            };
-            Przelewy newPrzelewWymianaPlnPlus = new Przelewy
-            {
-                Nazwa = "Wymiana Eur->Pln",
-                Cena = plnafterexchange,
-                Waluta = 1,
-                Kierunek = 2
-            };
-            _context.Przelewy.Add(newPrzelewWymianaEurMinus);
-            _context.SaveChanges();
-            _context.Przelewy.Add(newPrzelewWymianaPlnPlus);
-            _context.SaveChanges();
-
-
-            return RedirectToAction("Index", "Home");
-        }
-        public IActionResult AddPrzelewPlnToEur(decimal plnamount, decimal eurafterexchange)
-        {
-            Przelewy newPrzelewWymianaPlnMinus = new Przelewy
-            {
-                Nazwa = "Wymiana Pln->Eur",
-                Cena = plnamount,
-                Waluta = 1,
-                Kierunek = 1
-            };
-            Przelewy newPrzelewWymianaEurPlus = new Przelewy
-            {
-                Nazwa = "Wymiana Pln->Eur",
-                Cena = eurafterexchange,
-                Waluta = 2,
-                Kierunek = 2
-            };
-            _context.Przelewy.Add(newPrzelewWymianaPlnMinus);
-            _context.SaveChanges();
-            _context.Przelewy.Add(newPrzelewWymianaEurPlus);
-            _context.SaveChanges();
-
-
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        //Dodanie do tabeli Jedzenie
-        public IActionResult AddFood(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Jedzenie newFood = new Jedzenie
-                {
-                    Nazwa = model.Name,
-                Cena = model.Price,
-                Waluta = model.Currency
-        
-
-                };
-
-                _context.Jedzenie.Add(newFood);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Zdrowie
-        public IActionResult AddHealth(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Zdrowie newHealth = new Zdrowie
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency
-
-
-                };
-
-                _context.Zdrowie.Add(newHealth);
-                _context.SaveChanges();
-                return RedirectToAction("Index","Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Zachcianki
-        public IActionResult AddZach(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Zachcianki newZach = new Zachcianki
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency
-
-
-                };
-
-                _context.Zachcianki.Add(newZach);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Przelewy
-        public IActionResult AddPrzelew(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Przelewy newPrzelew = new Przelewy
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency,
-                    Kierunek = model.Who
-
-
-                };
-
-                _context.Przelewy.Add(newPrzelew);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        //Dodanie do tabeli Saldo
-        public IActionResult AddSaldo(FormData model)
-        {
-            
-                Saldo newSaldo = new Saldo
-                {
-                    PLN = model.PLN,
-                    EURO = model.EURO,
-
-
-                };
-
-                _context.Saldo.Add(newSaldo);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            
-            return RedirectToAction("Index", "Home");
         }
 
     }

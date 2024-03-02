@@ -153,7 +153,14 @@ label {
 }
 .radio {
     display: flex;
-    align-items: center;
+    justify-content: center; /* Wyœrodkowanie elementów w poziomie */
+    text-align: center; /* Wyœrodkowanie tekstu */
+}
+#directionDiv {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column; /* Ustawienie elementów w kolumnie */
+    align-items: center; /* Wyœrodkowanie elementów w kolumnie */
 }
 
 input[type="radio"] {

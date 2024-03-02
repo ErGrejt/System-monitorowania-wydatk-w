@@ -14,7 +14,7 @@
         
             <div class="test">
              <fieldset class="prawy">
-                 <form class="form-horizontal-first" method="post" action="@Url.Action("AddSaldoTransaction","Home")">
+                 <form class="form-horizontal-first" method="post" action="@Url.Action("AddSaldoTransaction","Function")">
         <legend>Dodaj swoje saldo PLN i EUR <br/>
          <a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a></legend>
         <!-- Saldo PLN-->
@@ -42,7 +42,7 @@
 <div class="test">
 <fieldset class="lewy">
 
-    <form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Home")">
+        <form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Function")">
     <legend>@ViewBag.AmountPLN</legend>
 
 <!-- Nazwa-->
@@ -129,23 +129,24 @@
 
 
                 <!-- Kierunek przelewu -->
-                <div  id="directionDiv" class="form-group" style="display: none;">
-                    <label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
-                    <div class="col-md-4">
-                        <div class="radio">
-                            <label for="Who-0">
-                                <input type="radio" name="Who" id="Who-0" value="1" checked="checked">
-                                Wychodzący
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label for="Who-1">
-                                <input type="radio" name="Who" id="Who-1" value="2">
-                                Przychodzący
-                            </label>
-                        </div>
-                    </div>
-                </div>
+     <div id="directionDiv" class="form-group">
+              <label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
+      <div class="col-md-4">
+          <div class="radio">
+                <label for="Who-0">
+                      <input type="radio" name="Who" id="Who-0" value="1" checked="checked">
+              Wychodzący
+            </label>
+            </div>
+              <div class="radio">
+                <label for="Who-1">
+                      <input type="radio" name="Who" id="Who-1" value="2">
+                  Przychodzący
+                </label>
+            </div>
+      </div>
+  </div>
+
             
             <input type="submit" value="Wyślij">
 
