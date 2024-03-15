@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Rejestracja";
+}
+<div class="test">
+    <form class="form-horizontal" method="post" action="@Url.Action("AddUser","Function")">
+    <fieldset class="lewy">
+
+        <!-- Form Name -->
+        <legend>Rejestracja</legend>
+
+        <!-- Text input-->
+        <div class="form-group">
+                <label class="col-md-4 control-label" for="Email">Email</label>
+            <div class="col-md-4">
+                    <input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md">
+            </div>
+        </div>
+
+        <!-- Password input-->
+        <div class="form-group">
+                <label class="col-md-4 control-label" for="password">Hasło</label>
+            <div class="col-md-4">
+                    <input id="password" name="password" type="password" class="form-control input-md">
+            </div>
+        </div>
+
+        <!-- Button -->
+        <div class="form-group">
+            <div class="col-md-4">
+                <button id="LoginButton" name="LoginButton" class="btn btn-primary">Zarejestruj</button>
+                <br /><span>Masz już konto? <a class="logreg" asp-area="" asp-controller="Home" asp-action="Login">Zaloguj się!</a></span>
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+</div>

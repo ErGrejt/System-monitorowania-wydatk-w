@@ -4,6 +4,7 @@ using WebApplication1.Models;
 using WebApplication1.Controllers;
 using freecurrencyapi;
 using freecurrencyapi.Helpers;
+using Org.BouncyCastle.Security;
 
 namespace WebApplication1.Controllers
 {
@@ -158,6 +159,40 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        [HttpPost]
+        public IActionResult AddUser(Users model)
+        {
+            if(ModelState.IsValid)
+            {
+                Users newUser = new Users
+                {
+                    Email = model.Email,
+                    Password = model.Password
+                };
+                _context.Users.Add(newUser);
+                _context.SaveChanges();
+                return RedirectToAction("Login", "Home");
+            }
+
+            return RedirectToAction("Register","Home");
+        }
+        [HttpPost]
+        public IActionResult CheckUser(UserLogin model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+                if(user != null)
+                {
+
+                    HttpContext.Session.SetInt32("UserId", user.Id);
+                    return RedirectToAction("Index","Home");
+                }
+            }
+
+            return RedirectToAction("Login", "Home");
+        }
+
         [HttpPost]
         public IActionResult AddTransaction(FormData model)
         {

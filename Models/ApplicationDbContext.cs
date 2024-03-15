@@ -17,6 +17,8 @@ namespace WebApplication1.Models
             public DbSet<Przelewy> Przelewy { get; set; }
 
             public DbSet<Saldo> Saldo { get; set; }
+
+            public DbSet<Users> Users { get; set; }
         
     }
 }

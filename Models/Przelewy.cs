@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
 
+        public int UserID { get; set; }
+
         public string Nazwa { get; set; }
 
         public decimal Cena { get; set; }

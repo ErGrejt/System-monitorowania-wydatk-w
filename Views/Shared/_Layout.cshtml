@@ -12,7 +12,7 @@
     {
 
 
-        if (saldoData.Rows.Count > 0 && ViewData["SaldoData"] != null && ViewData["wydatkizachcianki"] != null && ViewData["wydatkijedzenie"]
+        if (ViewData["SaldoData"] != null && saldoData.Rows.Count > 0 && saldoData != null && ViewData["wydatkizachcianki"] != null && ViewData["wydatkijedzenie"]
         != null && ViewData["wydatkizdrowie"] != null && ViewData["wydatkizdrowieeur"] != null && ViewData["wydatkijedzenieeur"]
         != null && ViewData["wydatkizachciankieur"] != null && ViewData["przelewwychodzacyzl"] != null && ViewData["przelewprzychodzacyzl"] != null
         && ViewData["przelewwychodzacyeuro"] != null && ViewData["przelewprzychodzacyeuro"] != null)
@@ -74,6 +74,7 @@
                 <div class="headermoj1">
                         <div class="container-fluid">
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">System monitorowania wydatków</a>
+                        <a class="navbar-brand-form-second" asp-area="" asp-controller="Home" asp-action="Login">Testowy chwilowy guzik</a>
                         </div>
 
                     @if (ViewContext.RouteData.Values["action"].ToString() != "Form")

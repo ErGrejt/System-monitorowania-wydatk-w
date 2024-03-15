@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text.Json;
 using freecurrencyapi;
 using freecurrencyapi.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1.Controllers
 {
@@ -101,6 +102,10 @@ namespace WebApplication1.Controllers
             waluty = waluty.Remove(1, 1).Insert(1, ",").Remove(4, 8);
             ViewData["kursEuro"] = waluty;
 
+            //Test
+            var IDuzytkownika = HttpContext.Session.GetInt32("UserId");
+            ViewData["ID"] = IDuzytkownika;
+
             return View();
         }
 
@@ -137,6 +142,14 @@ namespace WebApplication1.Controllers
             ViewData["kursPLNtoEUR"] = kursPLNtoEUR;
 
             return View();
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult Register() 
+        { 
+            return View(); 
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -10,7 +10,8 @@
     var zdrowieData = ViewData["ZdrowieData"] as DataTable;
     var zachciankaData = ViewData["ZachciankaData"] as DataTable;
     var saldoData = ViewData["SaldoData"] as DataTable;
-    
+    var IDUser = ViewData["ID"];
+
 }
 
 @{
@@ -19,8 +20,9 @@
 
 @if(maksymalnailosc == 0)
 {
-        <h1 >Niestety tabela jest pusta</h1>
+        <h1>Tabela jest pusta</h1>
         <h2>Dodaj swoją pierwszą transakcję</h2>
+        <h2>Test: @IDUser</h2>
            
         
         
