@@ -27,8 +27,9 @@ namespace WebApplication1.Controllers
                 {
                     Nazwa = model.Name,
                     Cena = model.Price,
-                    Waluta = model.Currency
-                };
+                    Waluta = model.Currency,
+                    UserID = (int)HttpContext.Session.GetInt32("UserId")
+            };
                 _context.Jedzenie.Add(newFood);
                 _context.SaveChanges();
                 return RedirectToAction("Index", "Home");
@@ -44,8 +45,8 @@ namespace WebApplication1.Controllers
                 {
                     Nazwa = model.Name,
                     Cena = model.Price,
-                    Waluta = model.Currency
-
+                    Waluta = model.Currency,
+                    UserID = (int)HttpContext.Session.GetInt32("UserId")
 
                 };
                 _context.Zdrowie.Add(newHealth);
@@ -63,8 +64,8 @@ namespace WebApplication1.Controllers
                 {
                     Nazwa = model.Name,
                     Cena = model.Price,
-                    Waluta = model.Currency
-
+                    Waluta = model.Currency,
+                    UserID = (int)HttpContext.Session.GetInt32("UserId")
 
                 };
 
@@ -84,8 +85,8 @@ namespace WebApplication1.Controllers
                     Nazwa = model.Name,
                     Cena = model.Price,
                     Waluta = model.Currency,
-                    Kierunek = model.Who
-
+                    Kierunek = model.Who,
+                    UserID = (int)HttpContext.Session.GetInt32("UserId")
 
                 };
                 _context.Przelewy.Add(newPrzelew);
@@ -102,7 +103,7 @@ namespace WebApplication1.Controllers
             {
                 PLN = model.PLN,
                 EURO = model.EURO,
-
+                UserID = (int)HttpContext.Session.GetInt32("UserId")
 
             };
             _context.Saldo.Add(newSaldo);
@@ -118,14 +119,16 @@ namespace WebApplication1.Controllers
                 Nazwa = "Wymiana Eur->Pln",
                 Cena = euramount,
                 Waluta = 2,
-                Kierunek = 1
+                Kierunek = 1,
+                UserID = (int)HttpContext.Session.GetInt32("UserId")
             };
             Przelewy newPrzelewWymianaPlnPlus = new Przelewy
             {
                 Nazwa = "Wymiana Eur->Pln",
                 Cena = plnafterexchange,
                 Waluta = 1,
-                Kierunek = 2
+                Kierunek = 2,
+                UserID = (int)HttpContext.Session.GetInt32("UserId")
             };
             _context.Przelewy.Add(newPrzelewWymianaEurMinus);
             _context.SaveChanges();
@@ -142,14 +145,16 @@ namespace WebApplication1.Controllers
                 Nazwa = "Wymiana Pln->Eur",
                 Cena = plnamount,
                 Waluta = 1,
-                Kierunek = 1
+                Kierunek = 1,
+                UserID = (int)HttpContext.Session.GetInt32("UserId")
             };
             Przelewy newPrzelewWymianaEurPlus = new Przelewy
             {
                 Nazwa = "Wymiana Pln->Eur",
                 Cena = eurafterexchange,
                 Waluta = 2,
-                Kierunek = 2
+                Kierunek = 2,
+                UserID = (int)HttpContext.Session.GetInt32("UserId")
             };
             _context.Przelewy.Add(newPrzelewWymianaPlnMinus);
             _context.SaveChanges();
@@ -191,6 +196,12 @@ namespace WebApplication1.Controllers
             }
 
             return RedirectToAction("Login", "Home");
+        }
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("UserId");
+            return RedirectToAction("Login","Home");
         }
 
         [HttpPost]

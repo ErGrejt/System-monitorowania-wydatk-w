@@ -73,11 +73,17 @@
                      </div>
                 <div class="headermoj1">
                         <div class="container-fluid">
+                        @if (ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register")
+                        {
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">System monitorowania wydatków</a>
-                        <a class="navbar-brand-form-second" asp-area="" asp-controller="Home" asp-action="Login">Testowy chwilowy guzik</a>
+                        } else
+                        {
+                            <a class="navbar-brand">System monitorowania wydatków</a>
+                        }
+
                         </div>
 
-                    @if (ViewContext.RouteData.Values["action"].ToString() != "Form")
+                    @if (ViewContext.RouteData.Values["action"].ToString() != "Form" && ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register")
                     {
                         <div class="form">
                             <a class="navbar-brand-form" asp-area="" asp-controller="Home" asp-action="Form">Dodaj transakcje</a>
@@ -112,9 +118,19 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Witold Woźniczka - <a>Zadanie ASP.NET</a>
+        <div class="stopka">
+            <div class="kontener footerleft">
+                &copy; 2024 - Witold Woźniczka - <a>Zadanie ASP.NET</a>
+            </div>
+            <div class="kontener footerright">
+               
+                
+                    <a class="logreg" asp-area="" asp-controller="Function" asp-action="Logout">Wyloguj się</a>
+                
+                
+            </div>
         </div>
+        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

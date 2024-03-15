@@ -236,3 +236,18 @@ input[type="submit"]:hover {
     text-decoration: none;
     color: black;
 }
+.stopka {
+    width: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: space-between; 
+   
+}
+.footerright {
+    margin-right: 70px;
+    
+}
+.footerleft {
+    margin-left: 70px;
+    
+}
