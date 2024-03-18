@@ -139,29 +139,29 @@ h1, h2 {
     border-radius: 5px;
     padding: 12px;
     background-color: #f9f9f9;
-    text-align: center; /* Wyœrodkowanie zawartoœci formularza */
+    text-align: center; 
 }
 .form-group {
     margin-bottom: 15px;
     display: flex;
-    flex-direction: column; /* Ustawienie elementów w kolumnie */
-    align-items: center; /* Wyœrodkowanie elementów w kolumnie */
+    flex-direction: column; 
+    align-items: center; 
 }
 
 label {
     font-weight: bold;
-    margin-bottom: 5px; /* Dodatkowy odstêp miêdzy etykietami */
+    margin-bottom: 5px;
 }
 .radio {
     display: flex;
-    justify-content: center; /* Wyœrodkowanie elementów w poziomie */
-    text-align: center; /* Wyœrodkowanie tekstu */
+    justify-content: center; 
+    text-align: center; 
 }
 #directionDiv {
     margin-bottom: 15px;
     display: flex;
-    flex-direction: column; /* Ustawienie elementów w kolumnie */
-    align-items: center; /* Wyœrodkowanie elementów w kolumnie */
+    flex-direction: column; 
+    align-items: center; 
 }
 
 input[type="radio"] {
@@ -250,4 +250,10 @@ input[type="submit"]:hover {
 .footerleft {
     margin-left: 70px;
     
+}
+.errorlogin {
+    text-align: center;
+    align-content: center;
+    color: red;
+    font-size: 15px;
 }

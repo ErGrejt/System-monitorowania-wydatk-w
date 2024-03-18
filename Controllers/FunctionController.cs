@@ -5,6 +5,9 @@ using WebApplication1.Controllers;
 using freecurrencyapi;
 using freecurrencyapi.Helpers;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Generators;
+using BCrypt.Net;
+using System.Text.RegularExpressions;
 
 namespace WebApplication1.Controllers
 {
@@ -169,34 +172,69 @@ namespace WebApplication1.Controllers
         {
             if(ModelState.IsValid)
             {
-                Users newUser = new Users
+                if(IsValidEmail(model.Email))
                 {
-                    Email = model.Email,
-                    Password = model.Password
-                };
-                _context.Users.Add(newUser);
-                _context.SaveChanges();
-                return RedirectToAction("Login", "Home");
+                    if(model.Password.Length >= 8)
+                    {
+                        string salt = BCrypt.Net.BCrypt.GenerateSalt();
+                        string password = model.Password;
+                        string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
+                        Users newUser = new Users
+                        {
+                            Email = model.Email,
+                            Password = hashed
+                        };
+                        _context.Users.Add(newUser);
+                        _context.SaveChanges();
+                        return RedirectToAction("Login", "Home");
+                    } else
+                    {
+                        TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
+                    } 
+                } else
+                {
+                    TempData["Email"] = "Nieprawidłowy Email";
+                }
             }
 
             return RedirectToAction("Register","Home");
+        }
+        public bool IsValidEmail(string email)
+        {
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            return Regex.IsMatch(email, pattern);
         }
         [HttpPost]
         public IActionResult CheckUser(UserLogin model)
         {
             if(ModelState.IsValid)
             {
-                var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+
+                var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
                 if(user != null)
                 {
-
-                    HttpContext.Session.SetInt32("UserId", user.Id);
-                    return RedirectToAction("Index","Home");
+                    if (VerifyHashedPassword(model.Password, user.Password))
+                    {
+                        HttpContext.Session.SetInt32("UserId", user.Id);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        TempData["error"] = "Nieprawidłowe hasło";
+                    }
+                    
+                } else
+                {
+                    TempData["error"] = "Nieprawidłowy adres e-mail";
                 }
             }
 
             return RedirectToAction("Login", "Home");
         }
+        public bool VerifyHashedPassword(string password, string hashedPassword) {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+
         [HttpGet]
         public IActionResult Logout()
         {

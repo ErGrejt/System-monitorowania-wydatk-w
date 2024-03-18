@@ -148,10 +148,14 @@ namespace WebApplication1.Controllers
         }
         public IActionResult Login()
         {
+            var error = TempData["error"] as string;
+            ViewData["Error"] = error;
             return View();
         }
         public IActionResult Register() 
         { 
+            var errorregister = TempData["Email"] as string;
+            ViewData["ErrorReg"] = errorregister;
             return View(); 
         }
 
