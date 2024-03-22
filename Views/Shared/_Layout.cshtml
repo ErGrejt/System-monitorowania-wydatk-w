@@ -8,6 +8,7 @@
     string kursEuroString = "";
     string result = "";
 
+
     if (ViewContext.RouteData.Values["action"].ToString() != "ExChange")
     {
 
@@ -124,8 +125,11 @@
             </div>
             <div class="kontener footerright">
                
-                
+                @if (ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register")
+                {
                     <a class="logreg" asp-area="" asp-controller="Function" asp-action="Logout">Wyloguj się</a>
+                }
+                
                 
                 
             </div>
