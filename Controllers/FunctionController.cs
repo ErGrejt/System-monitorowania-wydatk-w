@@ -11,298 +11,299 @@ using System.Text.RegularExpressions;
 
 namespace WebApplication1.Controllers
 {
-    public class FunctionController : Controller
-    {
-        private readonly AppDbContext _context;
+	public class FunctionController : Controller
+	{
+		private readonly AppDbContext _context;
 
-        public FunctionController(AppDbContext context)
-        {
-            _context = context;
-        }
+		public FunctionController(AppDbContext context)
+		{
+			_context = context;
+		}
 
-        [HttpPost]
-        //Dodanie do tabeli Jedzenie
-        public IActionResult AddFood(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Jedzenie newFood = new Jedzenie
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency,
-                    UserID = (int)HttpContext.Session.GetInt32("UserId")
-            };
-                _context.Jedzenie.Add(newFood);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Zdrowie
-        public IActionResult AddHealth(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Zdrowie newHealth = new Zdrowie
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency,
-                    UserID = (int)HttpContext.Session.GetInt32("UserId")
+		[HttpPost]
+		//Dodanie do tabeli Jedzenie
+		public IActionResult AddFood(FormData model)
+		{
+			if (ModelState.IsValid)
+			{
+				Food newFood = new Food
+				{
+					Name = model.Name,
+					Price = model.Price,
+					Currency = model.Currency,
+					UserID = (int)HttpContext.Session.GetInt32("UserId")
+				};
+				_context.Food.Add(newFood);
+				_context.SaveChanges();
+				return RedirectToAction("Index", "Home");
+			}
+			return RedirectToAction("Index", "Home");
+		}
+		//Dodanie do tabeli Zdrowie
+		public IActionResult AddHealth(FormData model)
+		{
+			if (ModelState.IsValid)
+			{
+				Health newHealth = new Health
+				{
+					Name = model.Name,
+					Price = model.Price,
+					Currency = model.Currency,
+					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
-                };
-                _context.Zdrowie.Add(newHealth);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Zachcianki
-        public IActionResult AddZach(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Zachcianki newZach = new Zachcianki
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency,
-                    UserID = (int)HttpContext.Session.GetInt32("UserId")
+				};
+				_context.Health.Add(newHealth);
+				_context.SaveChanges();
+				return RedirectToAction("Index", "Home");
+			}
+			return RedirectToAction("Index", "Home");
+		}
+		//Dodanie do tabeli Rozne
+		public IActionResult AddOthers(FormData model)
+		{
+			if (ModelState.IsValid)
+			{
+				Others newOthers = new Others
+				{
+					Name = model.Name,
+					Price = model.Price,
+					Currency = model.Currency,
+					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
-                };
+				};
 
-                _context.Zachcianki.Add(newZach);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        //Dodanie do tabeli Przelewy
-        public IActionResult AddPrzelew(FormData model)
-        {
-            if (ModelState.IsValid)
-            {
-                Przelewy newPrzelew = new Przelewy
-                {
-                    Nazwa = model.Name,
-                    Cena = model.Price,
-                    Waluta = model.Currency,
-                    Kierunek = model.Who,
-                    UserID = (int)HttpContext.Session.GetInt32("UserId")
+				_context.Others.Add(newOthers);
+				_context.SaveChanges();
+				return RedirectToAction("Index", "Home");
+			}
+			return RedirectToAction("Index", "Home");
+		}
+		//Dodanie do tabeli Przelewy
+		public IActionResult AddTransfer(FormData model)
+		{
+			if (ModelState.IsValid)
+			{
+				Transfers newTransfer = new Transfers
+				{
+					Name = model.Name,
+					Price = model.Price,
+					Currency = model.Currency,
+					Direction = model.Who,
+					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
-                };
-                _context.Przelewy.Add(newPrzelew);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
+				};
+				_context.Transfers.Add(newTransfer);
+				_context.SaveChanges();
+				return RedirectToAction("Index", "Home");
+			}
+			return RedirectToAction("Index", "Home");
+		}
 
-        //Dodanie do tabeli Saldo
-        public IActionResult AddSaldo(FormData model)
-        {
-            Saldo newSaldo = new Saldo
-            {
-                PLN = model.PLN,
-                EURO = model.EURO,
-                UserID = (int)HttpContext.Session.GetInt32("UserId")
+		//Dodanie do tabeli Saldo
+		public IActionResult AddBalance(FormData model)
+		{
+			Balance newBalance = new Balance
+			{
+				PLN = model.PLN,
+				EURO = model.EURO,
+				UserID = (int)HttpContext.Session.GetInt32("UserId")
 
-            };
-            _context.Saldo.Add(newSaldo);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+			};
+			_context.Balance.Add(newBalance);
+			_context.SaveChanges();
+			return RedirectToAction("Index", "Home");
 
-        }
-        //Funkcje dodawania
-        public IActionResult AddPrzelewEurToPln(decimal euramount, decimal plnafterexchange)
-        {
-            Przelewy newPrzelewWymianaEurMinus = new Przelewy
-            {
-                Nazwa = "Wymiana Eur->Pln",
-                Cena = euramount,
-                Waluta = 2,
-                Kierunek = 1,
-                UserID = (int)HttpContext.Session.GetInt32("UserId")
-            };
-            Przelewy newPrzelewWymianaPlnPlus = new Przelewy
-            {
-                Nazwa = "Wymiana Eur->Pln",
-                Cena = plnafterexchange,
-                Waluta = 1,
-                Kierunek = 2,
-                UserID = (int)HttpContext.Session.GetInt32("UserId")
-            };
-            _context.Przelewy.Add(newPrzelewWymianaEurMinus);
-            _context.SaveChanges();
-            _context.Przelewy.Add(newPrzelewWymianaPlnPlus);
-            _context.SaveChanges();
-
-
-            return RedirectToAction("Index", "Home");
-        }
-        public IActionResult AddPrzelewPlnToEur(decimal plnamount, decimal eurafterexchange)
-        {
-            Przelewy newPrzelewWymianaPlnMinus = new Przelewy
-            {
-                Nazwa = "Wymiana Pln->Eur",
-                Cena = plnamount,
-                Waluta = 1,
-                Kierunek = 1,
-                UserID = (int)HttpContext.Session.GetInt32("UserId")
-            };
-            Przelewy newPrzelewWymianaEurPlus = new Przelewy
-            {
-                Nazwa = "Wymiana Pln->Eur",
-                Cena = eurafterexchange,
-                Waluta = 2,
-                Kierunek = 2,
-                UserID = (int)HttpContext.Session.GetInt32("UserId")
-            };
-            _context.Przelewy.Add(newPrzelewWymianaPlnMinus);
-            _context.SaveChanges();
-            _context.Przelewy.Add(newPrzelewWymianaEurPlus);
-            _context.SaveChanges();
+		}
+		//Funkcje dodawania
+		public IActionResult AddTransferEurtoPln(decimal euramount, decimal plnafterexchange)
+		{
+			Transfers newTransferExchangeEurMinus = new Transfers
+			{
+				Name = "Wymiana Eur->Pln",
+				Price = euramount,
+				Currency = 2,
+				Direction = 1,
+				UserID = (int)HttpContext.Session.GetInt32("UserId")
+			};
+			Transfers newTransferExchangeOPlnPlus = new Transfers
+			{
+				Name = "Wymiana Eur->Pln",
+				Price = plnafterexchange,
+				Currency = 1,
+				Direction = 2,
+				UserID = (int)HttpContext.Session.GetInt32("UserId")
+			};
+			_context.Transfers.Add(newTransferExchangeEurMinus);
+			_context.SaveChanges();
+			_context.Transfers.Add(newTransferExchangeOPlnPlus);
+			_context.SaveChanges();
 
 
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        public IActionResult AddUser(Users model)
-        {
-            if(ModelState.IsValid)
-            {
-                if(IsValidEmail(model.Email))
-                {
-                    if(model.Password.Length >= 8)
-                    {
-                        string salt = BCrypt.Net.BCrypt.GenerateSalt();
-                        string password = model.Password;
-                        string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
-                        Users newUser = new Users
-                        {
-                            Email = model.Email,
-                            Password = hashed
-                        };
-                        _context.Users.Add(newUser);
-                        _context.SaveChanges();
-                        return RedirectToAction("Login", "Home");
-                    } else
-                    {
-                        TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
-                    } 
-                } else
-                {
-                    TempData["Email"] = "Nieprawidłowy Email";
-                }
-            }
+			return RedirectToAction("Index", "Home");
+		}
+		public IActionResult AddTransferPlntoEur(decimal plnamount, decimal eurafterexchange)
+		{
+			Transfers newTransferPlnExchangeMinus = new Transfers
+			{
+				Name = "Wymiana Pln->Eur",
+				Price = plnamount,
+				Currency = 1,
+				Direction = 1,
+				UserID = (int)HttpContext.Session.GetInt32("UserId")
+			};
+			Transfers newTransferEurExchangePlus = new Transfers
+			{
+				Name = "Wymiana Pln->Eur",
+				Price = eurafterexchange,
+				Currency = 2,
+				Direction = 2,
+				UserID = (int)HttpContext.Session.GetInt32("UserId")
+			};
+			_context.Transfers.Add(newTransferPlnExchangeMinus);
+			_context.SaveChanges();
+			_context.Transfers.Add(newTransferEurExchangePlus);
+			_context.SaveChanges();
 
-            return RedirectToAction("Register","Home");
-        }
-        public bool IsValidEmail(string email)
-        {
-            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
-            return Regex.IsMatch(email, pattern);
-        }
-        [HttpPost]
-        public IActionResult CheckUser(UserLogin model)
-        {
-            if(ModelState.IsValid)
-            {
 
-                var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
-                if(user != null)
-                {
-                    if (VerifyHashedPassword(model.Password, user.Password))
-                    {
-                        HttpContext.Session.SetInt32("UserId", user.Id);
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        TempData["error"] = "Nieprawidłowe hasło";
-                    }
-                    
-                } else
-                {
-                    TempData["error"] = "Nieprawidłowy adres e-mail";
-                }
-            }
+			return RedirectToAction("Index", "Home");
+		}
+		[HttpPost]
+		public IActionResult AddUser(Users model)
+		{
+			if (ModelState.IsValid)
+			{
+				if (IsValidEmail(model.Email))
+				{
+					if (model.Password.Length >= 8)
+					{
+						string salt = BCrypt.Net.BCrypt.GenerateSalt();
+						string password = model.Password;
+						string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
+						Users newUser = new Users
+						{
+							Email = model.Email,
+							Password = hashed
+						};
+						_context.Users.Add(newUser);
+						_context.SaveChanges();
+						return RedirectToAction("Login", "Home");
+					}
+					else
+					{
+						TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
+					}
+				}
+				else
+				{
+					TempData["Email"] = "Nieprawidłowy Email";
+				}
+			}
 
-            return RedirectToAction("Login", "Home");
-        }
-        public bool VerifyHashedPassword(string password, string hashedPassword) {
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        }
+			return RedirectToAction("Register", "Home");
+		}
+		public bool IsValidEmail(string email)
+		{
+			string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+			return Regex.IsMatch(email, pattern);
+		}
+		[HttpPost]
+		public IActionResult CheckUser(UserLogin model)
+		{
+			if (ModelState.IsValid)
+			{
 
-        [HttpGet]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Remove("UserId");
-            return RedirectToAction("Login","Home");
-        }
+				var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+				if (user != null)
+				{
+					if (VerifyHashedPassword(model.Password, user.Password))
+					{
+						HttpContext.Session.SetInt32("UserId", user.Id);
+						return RedirectToAction("Index", "Home");
+					}
+					else
+					{
+						TempData["error"] = "Nieprawidłowe hasło";
+					}
 
-        [HttpPost]
-        public IActionResult AddTransaction(FormData model)
-        {
+				}
+				else
+				{
+					TempData["error"] = "Nieprawidłowy adres e-mail";
+				}
+			}
 
-            if (ModelState.IsValid)
-            {
-                if (model.Category == 1)
-                {
-                    AddPrzelew(model);
-                }
-                else if (model.Category == 2)
-                {
-                    AddFood(model);
-                }
-                else if (model.Category == 3)
-                {   
-                    AddHealth(model);
-                }
-                else if (model.Category == 4)
-                {
-                    AddZach(model);
-                }
-            }
-            return RedirectToAction("index", "Home");
-        }
+			return RedirectToAction("Login", "Home");
+		}
+		public bool VerifyHashedPassword(string password, string hashedPassword)
+		{
+			return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+		}
 
-        public IActionResult AddSaldoTransaction(FormData model)
-        {
-            AddSaldo(model);
-            return RedirectToAction("Form", "Home");
-        }
-        [HttpPost]
-        public IActionResult DodajWymianeEur(string AmountEur)
-        {
-            decimal numer = Convert.ToDecimal(AmountEur);
-            //Klucz freecurrency
-            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-            //Wyciąganie kursu eur -> pln
-            string kursEURtoPLN = fx.Latest("EUR", "PLN");
-            kursEURtoPLN = kursEURtoPLN.Substring(15, 12);
-            kursEURtoPLN = kursEURtoPLN.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-            decimal kurseuro = Convert.ToDecimal(kursEURtoPLN);
-            decimal amountPLN = numer * kurseuro;
-            AddPrzelewEurToPln(numer, amountPLN);
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        public IActionResult DodajWymianePln(string AmountPLN)
-        {
-            decimal numer = Convert.ToDecimal(AmountPLN);
-            //Klucz freecurrency
-            var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-            //Wyciąganie kursu eur -> pln
-            string kursPlnToEur = fx.Latest("PLN", "EUR");
-            kursPlnToEur = kursPlnToEur.Substring(15, 12);
-            kursPlnToEur = kursPlnToEur.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-            decimal kurspln = Convert.ToDecimal(kursPlnToEur);
-            decimal amountEUR = numer * kurspln;
-           AddPrzelewPlnToEur(numer, amountEUR);
+		[HttpGet]
+		public IActionResult Logout()
+		{
+			HttpContext.Session.Remove("UserId");
+			return RedirectToAction("Login", "Home");
+		}
 
-            return RedirectToAction("Index", "Home");
-        }
-    }
+		[HttpPost]
+		public IActionResult AddTransaction(FormData model)
+		{
+			if (ModelState.IsValid)
+			{
+				switch (model.Category)
+				{
+					case 1:
+						AddTransfer(model);
+						break;
+					case 2:
+						AddFood(model);
+						break;
+					case 3:
+						AddHealth(model);
+						break;
+					case 4:
+						AddOthers(model);
+						break;
+				}
+				return RedirectToAction("index", "Home");
+			}
+			return RedirectToAction("Form", "Home");
+		}
+
+		public IActionResult AddBalanceTransaction(FormData model)
+		{
+			AddBalance(model);
+			return RedirectToAction("Form", "Home");
+		}
+		[HttpPost]
+		public IActionResult AddEurExchange(string AmountEur)
+		{
+			decimal number = Convert.ToDecimal(AmountEur);
+			//Klucz freecurrency
+			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+			string EurtoPlnRate = fx.Latest("EUR", "PLN");
+            EurtoPlnRate = EurtoPlnRate.Substring(15, 12);
+            EurtoPlnRate = EurtoPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+			decimal Eurorate = Convert.ToDecimal(EurtoPlnRate);
+			decimal amountPLN = number * Eurorate;
+            AddTransferEurtoPln(number, amountPLN);
+			return RedirectToAction("Index", "Home");
+		}
+		[HttpPost]
+		public IActionResult AddPlnExchange(string AmountPLN)
+		{
+			decimal number = Convert.ToDecimal(AmountPLN);
+			//Klucz freecurrency
+			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+			string PlntoEurRate = fx.Latest("PLN", "EUR");
+            PlntoEurRate = PlntoEurRate.Substring(15, 12);
+            PlntoEurRate = PlntoEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+			decimal Plnrate = Convert.ToDecimal(PlntoEurRate);
+			decimal amountEUR = number * Plnrate;
+            AddTransferPlntoEur(number, amountEUR);
+
+			return RedirectToAction("Index", "Home");
+		}
+	}
 }

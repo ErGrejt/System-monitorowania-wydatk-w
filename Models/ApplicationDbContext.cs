@@ -8,15 +8,15 @@ namespace WebApplication1.Models
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
-            public DbSet<Jedzenie> Jedzenie { get; set; }
+            public DbSet<Food> Food { get; set; }
 
-            public DbSet<Zdrowie> Zdrowie { get; set; }
+            public DbSet<Health> Health { get; set; }
 
-            public DbSet<Zachcianki> Zachcianki { get; set; }
+            public DbSet<Others> Others { get; set; }
 
-            public DbSet<Przelewy> Przelewy { get; set; }
+            public DbSet<Transfers> Transfers { get; set; }
 
-            public DbSet<Saldo> Saldo { get; set; }
+            public DbSet<Balance> Balance { get; set; }
 
             public DbSet<Users> Users { get; set; }
         

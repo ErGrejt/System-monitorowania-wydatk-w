@@ -1,6 +1,6 @@
 ﻿namespace WebApplication1.Models
 {
-    public class Saldo
+    public class Balance
     {
         public int Id { get; set; }
 

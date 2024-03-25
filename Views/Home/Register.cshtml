@@ -4,13 +4,11 @@
 }
 <div class="test">
     <form class="form-horizontal" method="post" action="@Url.Action("AddUser","Function")">
-    <fieldset class="lewy">
+        <fieldset class="Left">
 
-        <!-- Form Name -->
         <legend>Rejestracja</legend>
         <div class="errorlogin">@error</div>
-
-        <!-- Text input-->
+        
         <div class="form-group">
                 <label class="col-md-4 control-label" for="Email">Email</label>
             <div class="col-md-4">
@@ -18,7 +16,7 @@
             </div>
         </div>
 
-        <!-- Password input-->
+       
         <div class="form-group">
                 <label class="col-md-4 control-label" for="password">Hasło</label>
             <div class="col-md-4">
@@ -26,7 +24,6 @@
             </div>
         </div>
 
-        <!-- Button -->
         <div class="form-group">
             <div class="col-md-4">
                 <button id="LoginButton" name="LoginButton" class="btn btn-primary">Zarejestruj</button>

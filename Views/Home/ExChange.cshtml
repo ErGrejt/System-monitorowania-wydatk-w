@@ -1,159 +1,138 @@
 ﻿@{
-    ViewData["Title"] = "Wymiana";
+	ViewData["Title"] = "Wymiana";
 }
 
 @{
-    //Konwersja tego co przychodzi do normalnej liczby decimal
-    string eurtoplnstring = (string)ViewData["kursEURtoPLN"];
-    string plntoeurstring = (string)ViewData["kursPLNtoEUR"];
-    decimal eurtopln = Convert.ToDecimal(eurtoplnstring);
-    decimal plntoeur = Convert.ToDecimal(plntoeurstring);
+	string EurToPlnRate = (string)ViewData["EurToPlnRate"];
+	string PlnToEurRate = (string)ViewData["PlnToEurRate"];
+	decimal EurToPln = Convert.ToDecimal(EurToPlnRate);
+	decimal PlnToEur = Convert.ToDecimal(PlnToEurRate);
 }
 <script>
-    const EurToPln = @Json.Serialize(eurtopln);
-    const PlnToEur = @Json.Serialize(plntoeur);
+	const EurToPln = @Json.Serialize(EurToPln);
+	const PlnToEur = @Json.Serialize(PlnToEur);
 </script>
-<div class="prawy">
-    <div class="testexchange">
-      
+<div class="Right">
+	<div class="divexchange">
 
-        <!-- Form Name -->
-        <legend class="WymianaEP">Wymiana PLN i EUR</legend>
+		<legend class="ExchangeEP">Wymiana PLN i EUR</legend>
 
-        <!-- Select Basic -->
-        <div class="form-group">
-          <label class="col-md-4 control-label" for="SelectWho">Wymiana</label>
-          <div class="col-md-4">
-            <select id="SelectWho" name="SelectWho" class="form-control">
-              <option value="1" selected>EUR -&gt; PLN</option>
-              <option value="2">PLN -&gt; EUR</option>
-            </select>
-          </div>
-        </div>
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="SelectWho">Wymiana</label>
+			<div class="col-md-4">
+				<select id="SelectWho" name="SelectWho" class="form-control">
+					<option value="1" selected>EUR -&gt; PLN</option>
+					<option value="2">PLN -&gt; EUR</option>
+				</select>
+			</div>
+		</div>
+		<form class="form-horizontal" method="post" action="@Url.Action("AddEurExchange","Function")">
+			<fieldset>
+				<div id="EURPLN">
+					<div class="form-group">
+						<div class="col-md-4">
+							<label class="col-md-4 control-label" for="AmountEur">Ilość EUR</label>
+							<input id="AmountEur" name="AmountEur" type="text" placeholder="€€€" class="form-control input-md" required="">
+						</div>
+						<div class="Exchanger">
+							Kurs: @EurToPln <br />
+							<span id="eurilosc"></span>€ da Ci <span id="eurspan"></span> Zł <br />
+						</div>
 
+					</div>
+					<div class="form-group">
+						<div class="col-md-4">
 
-      <!-- Formularz dla EURO -> PLN -->
-       <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianeEur","Function")">
-        <fieldset>
-    <div id="EURPLN">
-        <!-- Text input-->
-        <div class="form-group">
-                  <div class="col-md-4">
-                      <label class="col-md-4 control-label" for="AmountEur">Ilość EUR</label>  
-                        <input id="AmountEur" name="AmountEur" type="text" placeholder="€€€" class="form-control input-md" required="">
-                 </div>
-                  <div class="Przelicznik">
-                      Kurs: @eurtopln <br/>
-                      <span id="eurilosc"></span>€ da Ci <span id="eurspan"></span> Zł <br/>
-                  </div>
-       
-        </div>
+							<input class="Button1" type="submit" value="Wymień">
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<form class="form-horizontal" method="post" action="@Url.Action("AddPlnExchange","Function")">
+			<fieldset>
+				<div id="PLNEUR">
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="AmountPLN">Ilość PLN</label>
+						<div class="col-md-4">
+							<input id="AmountPLN" name="AmountPLN" type="text" class="form-control input-md" required="">
 
-        <!-- Button -->
-        <div class="form-group">
-          <div class="col-md-4">
-         
-             <input class="guzik1" type="submit" value="Wymień">
-          </div>
-        </div>
-    </div>
-     </fieldset>
-     </form>
-     <form class="form-horizontal" method="post" action="@Url.Action("DodajWymianePln","Function")">
-        <fieldset>
-        <!-- Formularz dla PLN -> EURO -->
-           <div id="PLNEUR">
-            <!-- Text input-->
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="AmountPLN">Ilość PLN</label>  
-              <div class="col-md-4">
-              <input id="AmountPLN" name="AmountPLN" type="text" class="form-control input-md" required="">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-4">
+							<div class="Przelicznik">
+								Kurs: @PlnToEur <br />
+								<span id="plnilosc"></span> Zł da Ci <span id="plnspan"></span>€  <br />
+							</div>
+							<input class="Button2" type="submit" value="Wymień">
+						</div>
+					</div>
 
-              </div>
-            </div>
-
-            <!-- Button -->
-            <div class="form-group">
-              <div class="col-md-4">
-                  <div class="Przelicznik">
-                      Kurs: @plntoeur <br/>
-                      <span id="plnilosc"></span> Zł da Ci <span id="plnspan"></span>€  <br/>
-                  </div>
-                  <input class="guzik2" type="submit" value="Wymień">
-          </div>
-        </div>
-
-    </div>
-        </fieldset>
-        </form>
-    </div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
 </div>
-<!-- To pozniej zrobić zeby znikało ładnie-->
 <script>
 
-    function manageVisibility() {
-        var categorySelect = document.getElementById("SelectWho");
-        var PLNEUR = document.getElementById("PLNEUR");
-        var EURPLN = document.getElementById("EURPLN");
+	function manageVisibility() {
+		var categorySelect = document.getElementById("SelectWho");
+		var PLNEUR = document.getElementById("PLNEUR");
+		var EURPLN = document.getElementById("EURPLN");
 
 
-        if (categorySelect.value === "2") {
-            EURPLN.style.display = "none";
-            PLNEUR.style.display = "block";
+		if (categorySelect.value === "2") {
+			EURPLN.style.display = "none";
+			PLNEUR.style.display = "block";
 
-        } else {
-            EURPLN.style.display = "block"
-            PLNEUR.style.display = "none";
-        }
-    }
-
-    document.getElementById("SelectWho").addEventListener("change", manageVisibility);
-
-    manageVisibility();
+		} else {
+			EURPLN.style.display = "block"
+			PLNEUR.style.display = "none";
+		}
+	}
+	document.getElementById("SelectWho").addEventListener("change", manageVisibility);
+	manageVisibility();
 </script>
 <script>
-    const LiczbaInput = document.getElementById('AmountEur');
-    const wynikspaneur = document.getElementById('eurspan');
-    const wynikeurilosc = document.getElementById('eurilosc');
+	const LiczbaInput = document.getElementById('AmountEur');
+	const wynikspaneur = document.getElementById('eurspan');
+	const wynikeurilosc = document.getElementById('eurilosc');
 
-    function obliczWynik() {
-        const wpisaneeur = parseFloat(LiczbaInput.value.replace(',','.'));
+	function obliczWynik() {
+		const wpisaneeur = parseFloat(LiczbaInput.value.replace(',', '.'));
 
-        if(isNaN(wpisaneeur) || wpisaneeur === 0) {
-           wynikspaneur.textContent = '0';
-            wynikeurilosc.textContent = '0';
-        } else {
-             const result = (wpisaneeur * EurToPln).toFixed(2);
-           wynikeurilosc.textContent = wpisaneeur;
-        wynikspaneur.textContent = result;
-        }
-    }   
-    LiczbaInput.addEventListener('input',obliczWynik);
+		if (isNaN(wpisaneeur) || wpisaneeur === 0) {
+			wynikspaneur.textContent = '0';
+			wynikeurilosc.textContent = '0';
+		} else {
+			const result = (wpisaneeur * EurToPln).toFixed(2);
+			wynikeurilosc.textContent = wpisaneeur;
+			wynikspaneur.textContent = result;
+		}
+	}
+	LiczbaInput.addEventListener('input', obliczWynik);
 
-    obliczWynik();
-
-
+	obliczWynik();
 </script>
 <script>
-    const LiczbaPLN = document.getElementById('AmountPLN');
-    const wynikspanPLN = document.getElementById('plnspan');
-    const wynikPLNilosc = document.getElementById('plnilosc');
+	const LiczbaPLN = document.getElementById('AmountPLN');
+	const wynikspanPLN = document.getElementById('plnspan');
+	const wynikPLNilosc = document.getElementById('plnilosc');
 
-    function obliczWynikPLN() {
-        const wpisanepln = parseFloat(LiczbaPLN.value.replace(',','.'));
+	function obliczWynikPLN() {
+		const wpisanepln = parseFloat(LiczbaPLN.value.replace(',', '.'));
 
-        if(isNaN(wpisanepln) || wpisanepln === 0) {
-            wynikspanPLN.textContent = '0';
-            wynikPLNilosc.textContent = '0';
-        } else {
-             const result2 = (wpisanepln * PlnToEur).toFixed(2);
-           wynikPLNilosc.textContent = wpisanepln;
-            wynikspanPLN.textContent = result2;
-        }
-    }   
-    LiczbaPLN.addEventListener('input',obliczWynikPLN);
+		if (isNaN(wpisanepln) || wpisanepln === 0) {
+			wynikspanPLN.textContent = '0';
+			wynikPLNilosc.textContent = '0';
+		} else {
+			const result2 = (wpisanepln * PlnToEur).toFixed(2);
+			wynikPLNilosc.textContent = wpisanepln;
+			wynikspanPLN.textContent = result2;
+		}
+	}
+	LiczbaPLN.addEventListener('input', obliczWynikPLN);
 
-    obliczWynikPLN();
-
-
+	obliczWynikPLN();
 </script>

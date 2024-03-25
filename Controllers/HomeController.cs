@@ -24,107 +24,68 @@ namespace WebApplication1.Controllers
 			_context = context;
 			_logger = logger;
 		}
-		public DataTable Queries(MySqlConnection connection, string query, int ID)
-		{
-			MySqlCommand command = new MySqlCommand(query, connection);
-			command.Parameters.AddWithValue("@IDuzytkownika", ID);
-			using (MySqlDataReader reader = command.ExecuteReader())
-			{
-				DataTable Table = new DataTable();
-				Table.Load(reader);
-				return Table;
-			}
-		}
-		public decimal Expenses(MySqlConnection connection, string query, int ID)
-		{
-			MySqlCommand command = new MySqlCommand(query, connection);
-			command.Parameters.AddWithValue("@IDuzytkownika", ID);
-			decimal SUM = Convert.ToDecimal(command.ExecuteScalar());
-			return SUM;
-		}
 
 		public IActionResult Index()
 		{
 			if (HttpContext.Session.GetInt32("UserId") != null)
 			{
-
-				int IDuzytkownika = (int)HttpContext.Session.GetInt32("UserId");
-				ViewData["ID"] = IDuzytkownika;
-
+				int IDUser = (int)HttpContext.Session.GetInt32("UserId");
+				ViewData["ID"] = IDUser;
 				string connectionString = "Server=localhost;Database=System monitorowania wydatków;User=root;Password=;";
 				MySqlConnection connection = new MySqlConnection(connectionString);
 				connection.Open();
-
-				//Zapytanie przelewy
-				ViewData["PrzelewyData"] = _context.Przelewy.Where(p => p.UserID == IDuzytkownika).ToList();
-				//Zapytanie jedzenie
-				ViewData["JedzenieData"] = _context.Jedzenie.Where(p => p.UserID == IDuzytkownika).ToList();
-				//Zapytanie zdrowie
-				ViewData["ZdrowieData"] = _context.Zdrowie.Where(p => p.UserID == IDuzytkownika).ToList();
-				//Zapytanie zachcianki
-				ViewData["ZachciankaData"] = _context.Zachcianki.Where(p => p.UserID == IDuzytkownika).ToList();
-				//Pobierz saldo
-				ViewData["SaldoData"] = _context.Saldo.Where(p => p.UserID == IDuzytkownika).ToList();
-				//Zapytania pobieraj¹ce iloœæ wydanych pieniêdzy w z³otówkach z ka¿dej tabeli (poza przelewami)
-				//Zachcianki
-				ViewData["wydatkizachcianki"] = _context.Zachcianki
-					.Where(z => z.Waluta == 1 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["TransferData"] = _context.Transfers.Where(p => p.UserID == IDUser).ToList();
+				ViewData["FoodData"] = _context.Food.Where(p => p.UserID == IDUser).ToList();
+				ViewData["HealthData"] = _context.Health.Where(p => p.UserID == IDUser).ToList();
+				ViewData["OthersData"] = _context.Others.Where(p => p.UserID == IDUser).ToList();
+				ViewData["BalanceData"] = _context.Balance.Where(p => p.UserID == IDUser).ToList();
+				ViewData["ExpensesOthers"] = _context.Others
+					.Where(z => z.Currency == 1 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Jedzenie
-				ViewData["wydatkijedzenie"] = _context.Jedzenie
-					.Where(z => z.Waluta == 1 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesFood"] = _context.Food
+					.Where(z => z.Currency == 1 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Zdrowie
-				ViewData["wydatkizdrowie"] = _context.Zdrowie
-					.Where(z => z.Waluta == 1 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesHealth"] = _context.Health
+					.Where(z => z.Currency == 1 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Zapytania pobieraj¹ce iloœæ wydanych pieniêdzy w euro z ka¿dej tabeli (poza przelewami)
-				ViewData["wydatkizachciankieur"] = _context.Zachcianki
-					.Where(z => z.Waluta == 2 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesOthersEur"] = _context.Others
+					.Where(z => z.Currency == 2 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Jedzenie
-				ViewData["wydatkijedzenieeur"] = _context.Jedzenie
-					.Where(z => z.Waluta == 2 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesFoodEur"] = _context.Food
+					.Where(z => z.Currency == 2 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Zdrowie
-				ViewData["wydatkizdrowieeur"] = _context.Zdrowie
-					.Where(z => z.Waluta == 2 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesHealthEur"] = _context.Health
+					.Where(z => z.Currency == 2 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Przelew wychodz¹cy w z³otówkach
-				ViewData["przelewwychodzacyzl"] = _context.Przelewy
-					.Where(z => z.Waluta == 1 && z.Kierunek == 1 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesOutPln"] = _context.Transfers
+					.Where(z => z.Currency == 1 && z.Direction == 1 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Przelew przychodz¹cy w z³otówkach
-				ViewData["przelewprzychodzacyzl"] = _context.Przelewy
-					.Where(z => z.Waluta == 1 && z.Kierunek == 2 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesInPln"] = _context.Transfers
+					.Where(z => z.Currency == 1 && z.Direction == 2 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Przelew wychodz¹cy w euro
-				ViewData["przelewwychodzacyeuro"] = _context.Przelewy
-					.Where(z => z.Waluta == 2 && z.Kierunek == 1 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesOutEur"] = _context.Transfers
+					.Where(z => z.Currency == 2 && z.Direction == 1 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
-				//Przelew przychodz¹cy w euro
-				ViewData["przelewprzychodzacyeuro"] = _context.Przelewy
-					.Where(z => z.Waluta == 2 && z.Kierunek == 2 && z.UserID == IDuzytkownika)
-					.Select(z => z.Cena)
+				ViewData["ExpensesInEur"] = _context.Transfers
+					.Where(z => z.Currency == 2 && z.Direction == 2 && z.UserID == IDUser)
+					.Select(z => z.Price)
 					.Sum();
 
 				connection.Close();
-
-				//Pobieranie wartoœci EUR do PLN z freecurrencyApi
 				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-				string waluty = fx.Latest("EUR", "PLN");
-				waluty = waluty.Substring(15, 12);
-				waluty = waluty.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-				ViewData["kursEuro"] = waluty;
+				string Currencies = fx.Latest("EUR", "PLN");
+				Currencies = Currencies.Substring(15, 12);
+				Currencies = Currencies.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				ViewData["EuroRate"] = Currencies;
 
 				return View();
 			}
@@ -138,11 +99,11 @@ namespace WebApplication1.Controllers
 		{
 			if (HttpContext.Session.GetInt32("UserId") != null)
 			{
-				var IDuzytkownika = (int)HttpContext.Session.GetInt32("UserId");
-				var saldoData = _context.Saldo
-							.Where(s => s.UserID == IDuzytkownika)
+				var IDUser = (int)HttpContext.Session.GetInt32("UserId");
+				var BalanceData = _context.Balance
+							.Where(s => s.UserID == IDUser)
 							.ToList();
-				ViewData["SaldoData"] = saldoData;
+				ViewData["BalanceData"] = BalanceData;
 				return View();
 			}
 			else
@@ -156,16 +117,16 @@ namespace WebApplication1.Controllers
 			{
 				//Klucz freecurrency
 				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-				//Wyci¹ganie kursu eur -> pln
-				string kursEURtoPLN = fx.Latest("EUR", "PLN");
-				kursEURtoPLN = kursEURtoPLN.Substring(15, 12);
-				kursEURtoPLN = kursEURtoPLN.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-				ViewData["kursEURtoPLN"] = kursEURtoPLN;
-				//Wyci¹ganie kursu pln -> eur
-				string kursPLNtoEUR = fx.Latest("PLN", "EUR");
-				kursPLNtoEUR = kursPLNtoEUR.Substring(15, 12);
-				kursPLNtoEUR = kursPLNtoEUR.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-				ViewData["kursPLNtoEUR"] = kursPLNtoEUR;
+				
+				string EurToPlnRate = fx.Latest("EUR", "PLN");
+                EurToPlnRate = EurToPlnRate.Substring(15, 12);
+                EurToPlnRate = EurToPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				ViewData["EurToPlnRate"] = EurToPlnRate;
+				
+				string PlnToEurRate = fx.Latest("PLN", "EUR");
+                PlnToEurRate = PlnToEurRate.Substring(15, 12);
+                PlnToEurRate = PlnToEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				ViewData["PlnToEurRate"] = PlnToEurRate;
 
 				return View();
 			}

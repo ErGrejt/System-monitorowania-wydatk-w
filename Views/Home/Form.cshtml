@@ -1,155 +1,157 @@
 ﻿@{
-    ViewData["Title"] = "Formularz";
+	ViewData["Title"] = "Formularz";
 }
 @using System.Data
 @model FormData
 @{
-    var saldoData = ViewData["SaldoData"] as List<Saldo>;
-    int RowCount = saldoData.Count;
+	var BalanceData = ViewData["BalanceData"] as List<Balance>;
+	int RowCount = BalanceData.Count;
 
 }
 
-    @if (RowCount == 0)
-    {
-        
-            <div class="test">
-             <fieldset class="prawy">
-                 <form class="form-horizontal-first" method="post" action="@Url.Action("AddSaldoTransaction","Function")">
-        <legend>Dodaj swoje saldo PLN i EUR <br/>
-         <a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a></legend>
-        <!-- Saldo PLN-->
-        <div class="form-group">
-                <label class="control-label" for="PLNSaldo">Saldo PLN</label>  
-                <div class="">
-                    <input id="PLNSaldo" name="PLN" type="text" placeholder="" class="input-md" required="">
+@if (RowCount == 0)
+{
+	<div class="test">
+		<fieldset class="Right">
+			<form class="form-horizontal-first" method="post" action="@Url.Action("AddBalanceTransaction","Function")">
+				<legend>
+					Dodaj swoje saldo PLN i EUR <br />
+					<a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a>
+				</legend>
 
-                </div>
-        </div>
-        <!-- Saldo EURO-->
-        <div class="form-group">
-                <label class="control-label" for="EUROSaldo">Saldo EURO</label>  
-                <div>
-                    <input id="EUROSaldo" name="EURO" type="text" placeholder="" class="input-md" required="">
-                   
-                </div>
-        </div>
-            <input type="submit" value="Wyślij">
-                </form>
-        </fieldset>
-        </div>
-    } else
-    {
-<div class="test">
-<fieldset class="lewy">
+				<div class="form-group">
+					<label class="control-label" for="PLNSaldo">Saldo PLN</label>
+					<div class="">
+						<input id="PLNSaldo" name="PLN" type="text" placeholder="" class="input-md" required="">
 
-        <form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Function")">
-    <legend>@ViewBag.AmountPLN</legend>
+					</div>
+				</div>
 
-<!-- Nazwa-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="Name">Nazwa</label>  
-  <div class="col-md-4">
-  <input id="Name" name="Name" type="text" placeholder="Za co" class="form-control input-md" required="">
+				<div class="form-group">
+					<label class="control-label" for="EUROSaldo">Saldo EURO</label>
+					<div>
+						<input id="EUROSaldo" name="EURO" type="text" placeholder="" class="input-md" required="">
 
-  </div>
-</div>
+					</div>
+				</div>
+				<input type="submit" value="Wyślij">
+			</form>
+		</fieldset>
+	</div>
+}
+else
+{
+	<div class="test">
+		<fieldset class="Left">
 
-<!-- Cena-->
-<div class="form-group">
+			<form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Function")">
+				<legend>@ViewBag.AmountPLN</legend>
 
 
-  <label id="CenaID" class="col-md-4 control-label" for="Price">Cena</label>
-   <label id="KwotaID" class="col-md-4 control-label" for="Price">Kwota przelewu</label> 
-   
-  <div class="col-md-4">
-  <input id="Price" name="Price" type="text" placeholder="" class="form-control input-md" required="">
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="Name">Nazwa</label>
+					<div class="col-md-4">
+						<input id="Name" name="Name" type="text" placeholder="Za co" class="form-control input-md" required="">
 
-  </div>
-</div>
+					</div>
+				</div>
 
-<!-- Waluta -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="Currency">Waluta</label>
-  <div class="col-md-4">
-  <div class="radio">
-    <label for="Currency-0">
-      <input type="radio" name="Currency" id="Currency-0" value="1" checked="checked">
-      PLN
-    </label>
-    </div>
-  <div class="radio">
-    <label for="Currency-1">
-      <input type="radio" name="Currency" id="Currency-1" value="2">
-      EUR
-    </label>
-    </div>
-  </div>
-</div>
 
-<!-- Kategoria transakcji -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="Category">Kategoria</label>
-  <div class="col-md-4">
-    <select id="Category" name="Category" class="form-control">
-      <option value="1">Przelewy</option>
-      <option value="2" selected="selected">Jedzenie</option>
-      <option value="3">Zdrowie</option>
-      <option value="4">Zachcianki</option>
-    </select>
-  </div>
-</div>
+				<div class="form-group">
 
- 
-                <!-- Kierunek przelewu -->
-     <div id="directionDiv" class="form-group">
-              <label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
-      <div class="col-md-4">
-          <div class="radio">
-                <label for="Who-0">
-                      <input type="radio" name="Who" id="Who-0" value="1" checked="checked">
-              Wychodzący
-            </label>
-            </div>
-              <div class="radio">
-                <label for="Who-1">
-                      <input type="radio" name="Who" id="Who-1" value="2">
-                  Przychodzący
-                </label>
-            </div>
-      </div>
-  </div>
 
-            
-            <input class="formbutton"type="submit" value="Wyślij">
+					<label id="CenaID" class="col-md-4 control-label" for="Price">Cena</label>
+					<label id="KwotaID" class="col-md-4 control-label" for="Price">Kwota przelewu</label>
 
-            </form>    
-</fieldset>
-</div>
+					<div class="col-md-4">
+						<input id="Price" name="Price" type="text" placeholder="" class="form-control input-md" required="">
+
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="Currency">Waluta</label>
+					<div class="col-md-4">
+						<div class="radio">
+							<label for="Currency-0">
+								<input type="radio" name="Currency" id="Currency-0" value="1" checked="checked">
+								PLN
+							</label>
+						</div>
+						<div class="radio">
+							<label for="Currency-1">
+								<input type="radio" name="Currency" id="Currency-1" value="2">
+								EUR
+							</label>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="Category">Kategoria</label>
+					<div class="col-md-4">
+						<select id="Category" name="Category" class="form-control">
+							<option value="1">Przelewy</option>
+							<option value="2" selected="selected">Jedzenie</option>
+							<option value="3">Zdrowie</option>
+							<option value="4">Inne</option>
+						</select>
+					</div>
+				</div>
+
+
+
+				<div id="directionDiv" class="form-group">
+					<label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
+					<div class="col-md-4">
+						<div class="radio">
+							<label for="Who-0">
+								<input type="radio" name="Who" id="Who-0" value="1" checked="checked">
+								Wychodzący
+							</label>
+						</div>
+						<div class="radio">
+							<label for="Who-1">
+								<input type="radio" name="Who" id="Who-1" value="2">
+								Przychodzący
+							</label>
+						</div>
+					</div>
+				</div>
+
+
+				<input class="formbutton" type="submit" value="Wyślij">
+
+			</form>
+		</fieldset>
+	</div>
 }
 <script>
 
-    function manageVisibility() {
-        var categorySelect = document.getElementById("Category");
-        var directionDiv = document.getElementById("directionDiv");
-        var cena = document.getElementById('CenaID');
-        var kwota = document.getElementById('KwotaID');
+	function manageVisibility() {
+		var categorySelect = document.getElementById("Category");
+		var directionDiv = document.getElementById("directionDiv");
+		var cena = document.getElementById('CenaID');
+		var kwota = document.getElementById('KwotaID');
 
-        if (categorySelect.value == "1") {
-            cena.classList.add("testform");
-            kwota.classList.remove("testform");
-            directionDiv.classList.remove("testform");
-        } else {
-            cena.classList.remove("testform");
-            kwota.classList.add("testform");
-            directionDiv.classList.add("testform");
-        }
-    }
-
-
-    document.getElementById("Category").addEventListener("change", manageVisibility);
+		if (categorySelect.value == "1") {
+			cena.classList.add("testform");
+			kwota.classList.remove("testform");
+			directionDiv.classList.remove("testform");
+		} else {
+			cena.classList.remove("testform");
+			kwota.classList.add("testform");
+			directionDiv.classList.add("testform");
+		}
+	}
 
 
-    manageVisibility();
+	document.getElementById("Category").addEventListener("change", manageVisibility);
+
+
+	manageVisibility();
 </script>
 
 

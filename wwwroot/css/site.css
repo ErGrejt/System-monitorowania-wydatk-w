@@ -20,13 +20,13 @@ html {
 body {
   margin-bottom: 10px;
 }
-.gora {
+.Up {
     display: flex;
 }
-.headermoj1 {
+.MyHeader1 {
     width: 60%;
 }
-.headermoj2 {
+.MyHeader2 {
     width: 20%;
 }
 .container-fluid,
@@ -36,8 +36,8 @@ body {
 }
 
 
-.saldoplndiv,
-.saldoeurdiv {
+.Balanceplndiv,
+.Balanceeurdiv {
     font-size: 20px;
     text-align: right;
     margin-top: 8px;
@@ -90,17 +90,15 @@ th, td {
     width: 20%;
 }
 
-.kwota {
-   
+.indexprice {
     border: none;
     border-right: 1px solid black;
     margin: 0px;
 }
 
-.rzecz {
+.indexname {
     border: none;
     padding: 0px;
-    
 }
 .inner-table td {
     height: 10px;
@@ -111,35 +109,36 @@ h1, h2 {
    padding: 20px;
 }
 
-.przelewwychodzacy {
+.TransferOut {
     color: red;
     border: none;
     border-right: 1px solid black;
     margin: 0px;
 }
 
-.przelewprzychodzacy {
+.TransferIn {
     color: rgb(77, 232, 33);
     border: none;
     border-right: 1px solid black;
     margin: 0px;
 }
-.testexchange {
+.divexchange {
     width: 100%;
     margin-top: 40px;
 }
-/* Tutaj Form*/
 .test {
     width: 100%;
 }
 
-.lewy,
-.prawy {
+
+
+.Left,
+.Right {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 12px;
     background-color: #f9f9f9;
-    text-align: center; 
+    text-align: center;
 }
 .form-group {
     margin-bottom: 15px;
@@ -200,15 +199,17 @@ input[type="submit"]:hover {
 .formbutton {
     margin-top: 16px;
 }
-/* Koniec Form*/
-.Przelicznik {
-   text-align: center;
+
+
+
+.Exchanger {
+    text-align: center;
 }
-.guzik1 {
+.Button1 {
     align-content: center;
     margin-top: 50px;
 }
-.guzik2 {
+.Button2 {
     align-content: center;
     margin-top: 2px;
 }
@@ -216,7 +217,7 @@ input[type="submit"]:hover {
 .col-md-4 {
     text-align: center;
 }
-.WymianaEP {
+.ExchangeEP {
     text-align: center;
     font-size: 28px;
     margin-bottom: 15px;
@@ -236,12 +237,11 @@ input[type="submit"]:hover {
     text-decoration: none;
     color: black;
 }
-.stopka {
+.myfooter {
     width: 100%;
     background-color: #f0f0f0;
     display: flex;
-    justify-content: space-between; 
-   
+    justify-content: space-between;
 }
 .footerright {
     margin-right: 70px;

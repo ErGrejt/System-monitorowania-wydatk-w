@@ -4,19 +4,18 @@
 @using System.Data
 @model System.Data.DataTable
 @{
-	var przelewyData = ViewData["PrzelewyData"] as List<Przelewy>;
-	var jedzenieData = ViewData["JedzenieData"] as List<Jedzenie>;
-	var zdrowieData = ViewData["ZdrowieData"] as List<Zdrowie>;
-	var zachciankaData = ViewData["ZachciankaData"] as List<Zachcianki>;
-	var saldoData = ViewData["SaldoData"] as List<Saldo>;
+	var TransferData = ViewData["TransferData"] as List<Transfers>;
+	var FoodData = ViewData["FoodData"] as List<Food>;
+	var HealthData = ViewData["HealthData"] as List<Health>;
+	var OthersData = ViewData["OthersData"] as List<Others>;
 	var id = ViewData["ID"];
 
 	var maxRecords = new List<int>
 	{
-		przelewyData?.Count ?? 0,
-		jedzenieData?.Count ?? 0,
-		zdrowieData?.Count ?? 0,
-		zachciankaData?.Count ?? 0,
+		TransferData?.Count ?? 0,
+		FoodData?.Count ?? 0,
+		HealthData?.Count ?? 0,
+		OthersData?.Count ?? 0,
 	}.Max();
 }
 @if (maxRecords == 0)
@@ -26,7 +25,7 @@
 }
 else
 {
-	@if (przelewyData != null || jedzenieData != null || zdrowieData != null || zachciankaData != null)
+	@if (TransferData != null || FoodData != null || HealthData != null || OthersData != null)
 	{
 		<div class="containerindex">
 			<table class="center">
@@ -34,23 +33,23 @@ else
 					<th>Przelewy</th>
 					<th>Jedzenie</th>
 					<th>Zdrowie</th>
-					<th>Zachcianki</th>
+					<th>Różne</th>
 				</tr>
 				@for (int i = 0; i < maxRecords; i++)
 				{
 					<tr>
 						<td>
-							@if (i < przelewyData.Count)
+							@if (i < TransferData.Count)
 							{
 								<table class="inner-table">
 									<tr>
 										@{
-											var przelew = przelewyData[i];
-											int walutaprzelewy = przelew.Waluta;
-											int kierunekprzelewu = przelew.Kierunek;
-											char znak;
+											var Transfer = TransferData[i];
+											int TransferCurrency = Transfer.Currency;
+											int TransferDirection = Transfer.Direction;
+											char mp;
 											string suffix;
-											if (walutaprzelewy == 1)
+											if (TransferCurrency == 1)
 											{
 												suffix = "Zł";
 											}
@@ -58,36 +57,36 @@ else
 											{
 												suffix = "Eur";
 											}
-											if (kierunekprzelewu == 1)
+											if (TransferDirection == 1)
 											{
-												znak = '-';
-												<td class="przelewwychodzacy">@znak @przelew.Cena @suffix</td>
+												mp = '-';
+												<td class="TransferOut">@mp @Transfer.Price @suffix</td>
 											}
 											else
 											{
-												znak = '+';
-												<td class="przelewprzychodzacy">@znak @przelew.Cena @suffix</td>
+												mp = '+';
+												<td class="TransferIn">@mp @Transfer.Price @suffix</td>
 											}
 
 										}
 
-										<td class="rzecz">@przelew.Nazwa</td>
+										<td class="indexname">@Transfer.Name</td>
 									</tr>
 
 								</table>
 							}
 						</td>
 						<td>
-							@if (i < jedzenieData.Count)
+							@if (i < FoodData.Count)
 							{
 
 								<table class="inner-table">
 									<tr>
 										@{
-											var jedzenie = jedzenieData[i];
-											int walutafood = jedzenie.Waluta;
+											var food = FoodData[i];
+											int FoodCurrency = food.Currency;
 											string suffix;
-											if (walutafood == 1)
+											if (FoodCurrency == 1)
 											{
 												suffix = "Zł";
 											}
@@ -96,24 +95,24 @@ else
 												suffix = "Eur";
 											}
 										}
-										<td class="kwota">- @jedzenie.Cena @suffix</td>
-										<td class="rzecz">@jedzenie.Nazwa</td>
+										<td class="indexprice">- @food.Price @suffix</td>
+										<td class="indexname">@food.Name</td>
 									</tr>
 								</table>
 
 							}
 						</td>
 						<td>
-							@if (i < zdrowieData.Count)
+							@if (i < HealthData.Count)
 							{
 
 								<table class="inner-table">
 									<tr>
 										@{
-											var zdrowie = zdrowieData[i];
-											int walutafood = zdrowie.Waluta;
+											var Health = HealthData[i];
+											int HealthCurrency = Health.Currency;
 											string suffix;
-											if (walutafood == 1)
+											if (HealthCurrency == 1)
 											{
 												suffix = "Zł";
 											}
@@ -122,24 +121,24 @@ else
 												suffix = "Eur";
 											}
 										}
-										<td class="kwota">- @zdrowie.Cena @suffix</td>
-										<td class="rzecz">@zdrowie.Nazwa</td>
+										<td class="indexprice">- @Health.Price @suffix</td>
+										<td class="indexname">@Health.Name</td>
 									</tr>
 								</table>
 
 							}
 						</td>
 						<td>
-							@if (i < zachciankaData.Count)
+							@if (i < OthersData.Count)
 							{
 
 								<table class="inner-table">
 									<tr>
 										@{
-											var zachcianka = zachciankaData[i];
-											int walutafood = zachcianka.Waluta;
+											var Others = OthersData[i];
+											int OthersCurrency = Others.Currency;
 											string suffix;
-											if (walutafood == 1)
+											if (OthersCurrency == 1)
 											{
 												suffix = "Zł";
 											}
@@ -148,8 +147,8 @@ else
 												suffix = "Eur";
 											}
 										}
-										<td class="kwota">- @zachcianka.Cena @suffix</td>
-										<td class="rzecz">@zachcianka.Nazwa</td>
+										<td class="indexprice">- @Others.Price @suffix</td>
+										<td class="indexname">@Others.Name</td>
 									</tr>
 								</table>
 
