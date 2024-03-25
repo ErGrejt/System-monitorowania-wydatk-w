@@ -4,8 +4,8 @@
 @using System.Data
 @model FormData
 @{
-    var saldoData = ViewData["SaldoData"] as DataTable;
-    int RowCount = saldoData.Rows.Count;
+    var saldoData = ViewData["SaldoData"] as List<Saldo>;
+    int RowCount = saldoData.Count;
 
 }
 
