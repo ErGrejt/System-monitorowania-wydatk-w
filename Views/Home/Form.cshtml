@@ -2,18 +2,21 @@
 	ViewData["Title"] = "Formularz";
 }
 @using System.Data
-@model FormData
+@model FormData;
 @{
+	int RowCount = 0;
 	var BalanceData = ViewData["BalanceData"] as List<Balance>;
-	int RowCount = BalanceData.Count;
-
+	if (BalanceData != null)
+	{
+		RowCount = BalanceData.Count;
+	}
 }
 
 @if (RowCount == 0)
 {
 	<div class="test">
 		<fieldset class="Right">
-			<form class="form-horizontal-first" method="post" action="@Url.Action("AddBalanceTransaction","Function")">
+			<form class="form-horizontal-first" method="post" action="@Url.Action("AddBalance","Function")">
 				<legend>
 					Dodaj swoje saldo PLN i EUR <br />
 					<a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a>
@@ -21,17 +24,17 @@
 
 				<div class="form-group">
 					<label class="control-label" for="PLNSaldo">Saldo PLN</label>
-					<div class="">
-						<input id="PLNSaldo" name="PLN" type="text" placeholder="" class="input-md" required="">
-
+					<div>
+						<input id="PLN" name="PLN" type="number" placeholder="" class="input-md" required="">
+						<div>@Html.ValidationMessageFor(model => model.PLN)</div>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="control-label" for="EUROSaldo">Saldo EURO</label>
 					<div>
-						<input id="EUROSaldo" name="EURO" type="text" placeholder="" class="input-md" required="">
-
+						<input id="EURO" name="EURO" type="number" placeholder="" class="input-md" required="">
+						<div>@Html.ValidationMessageFor(model => model.EURO)</div>
 					</div>
 				</div>
 				<input type="submit" value="Wyślij">
@@ -52,7 +55,7 @@ else
 					<label class="col-md-4 control-label" for="Name">Nazwa</label>
 					<div class="col-md-4">
 						<input id="Name" name="Name" type="text" placeholder="Za co" class="form-control input-md" required="">
-
+						<div>@Html.ValidationMessageFor(model => model.Name)</div>
 					</div>
 				</div>
 
@@ -64,8 +67,8 @@ else
 					<label id="KwotaID" class="col-md-4 control-label" for="Price">Kwota przelewu</label>
 
 					<div class="col-md-4">
-						<input id="Price" name="Price" type="text" placeholder="" class="form-control input-md" required="">
-
+						<input id="Price" name="Price" type="text" placeholder="0,00" class="form-control input-md" required="">
+						<div>@Html.ValidationMessageFor(model => model.Price)</div>
 					</div>
 				</div>
 

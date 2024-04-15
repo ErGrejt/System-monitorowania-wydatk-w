@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 using Pomelo.EntityFrameworkCore.MySql;
 using WebApplication1.Controllers;
+using Microsoft.AspNetCore.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +15,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString));
 });
-
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

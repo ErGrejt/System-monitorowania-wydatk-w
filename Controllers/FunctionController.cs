@@ -15,9 +15,11 @@ namespace WebApplication1.Controllers
 	{
 		private readonly AppDbContext _context;
 
+
 		public FunctionController(AppDbContext context)
 		{
 			_context = context;
+
 		}
 
 		[HttpPost]
@@ -100,19 +102,22 @@ namespace WebApplication1.Controllers
 		}
 
 		//Dodanie do tabeli Saldo
-		public IActionResult AddBalance(FormData model)
+		public IActionResult AddBalance(Balance model)
 		{
-			Balance newBalance = new Balance
+			if (ModelState.IsValid)
 			{
-				PLN = model.PLN,
-				EURO = model.EURO,
-				UserID = (int)HttpContext.Session.GetInt32("UserId")
+				Balance newBalance = new Balance
+				{
+					PLN = model.PLN,
+					EURO = model.EURO,
+					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
-			};
-			_context.Balance.Add(newBalance);
-			_context.SaveChanges();
+				};
+				_context.Balance.Add(newBalance);
+				_context.SaveChanges();
+				return RedirectToAction("Index", "Home");
+			}
 			return RedirectToAction("Index", "Home");
-
 		}
 		//Funkcje dodawania
 		public IActionResult AddTransferEurtoPln(decimal euramount, decimal plnafterexchange)
@@ -174,26 +179,31 @@ namespace WebApplication1.Controllers
 			{
 				if (IsValidEmail(model.Email))
 				{
-					if (model.Password.Length >= 8)
+					if (!_context.Users.Any(p => p.Email == model.Email))
 					{
-						string salt = BCrypt.Net.BCrypt.GenerateSalt();
-						string password = model.Password;
-						string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
-						Users newUser = new Users
+						if (model.Password.Length >= 8)
 						{
-							Email = model.Email,
-							Password = hashed
-						};
-						_context.Users.Add(newUser);
-						_context.SaveChanges();
-						return RedirectToAction("Login", "Home");
-					}
-					else
+							string salt = BCrypt.Net.BCrypt.GenerateSalt();
+							string password = model.Password;
+							string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
+							Users newUser = new Users
+							{
+								Email = model.Email,
+								Password = hashed
+							};
+							_context.Users.Add(newUser);
+							_context.SaveChanges();
+							return RedirectToAction("Login", "Home");
+						}
+						else
+						{
+							TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
+						}
+					} else
 					{
-						TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
+						TempData["Email"] = "Adres Email jest zajęty";
 					}
-				}
-				else
+				} else
 				{
 					TempData["Email"] = "Nieprawidłowy Email";
 				}
@@ -271,39 +281,47 @@ namespace WebApplication1.Controllers
 			return RedirectToAction("Form", "Home");
 		}
 
-		public IActionResult AddBalanceTransaction(FormData model)
-		{
-			AddBalance(model);
-			return RedirectToAction("Form", "Home");
-		}
 		[HttpPost]
 		public IActionResult AddEurExchange(string AmountEur)
 		{
-			decimal number = Convert.ToDecimal(AmountEur);
-			//Klucz freecurrency
-			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-			string EurtoPlnRate = fx.Latest("EUR", "PLN");
-            EurtoPlnRate = EurtoPlnRate.Substring(15, 12);
-            EurtoPlnRate = EurtoPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-			decimal Eurorate = Convert.ToDecimal(EurtoPlnRate);
-			decimal amountPLN = number * Eurorate;
-            AddTransferEurtoPln(number, amountPLN);
-			return RedirectToAction("Index", "Home");
+			if (!decimal.TryParse(AmountEur, out decimal number))
+			{
+				return RedirectToAction("ExChange", "Home");
+			}
+			else
+			{
+				decimal numberr = Convert.ToDecimal(AmountEur);
+				//Klucz freecurrency
+				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+				string EurtoPlnRate = fx.Latest("EUR", "PLN");
+				EurtoPlnRate = EurtoPlnRate.Substring(15, 12);
+				EurtoPlnRate = EurtoPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				decimal Eurorate = Convert.ToDecimal(EurtoPlnRate);
+				decimal amountPLN = numberr * Eurorate;
+				AddTransferEurtoPln(numberr, amountPLN);
+				return RedirectToAction("Index", "Home");
+			}
 		}
 		[HttpPost]
 		public IActionResult AddPlnExchange(string AmountPLN)
 		{
-			decimal number = Convert.ToDecimal(AmountPLN);
-			//Klucz freecurrency
-			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-			string PlntoEurRate = fx.Latest("PLN", "EUR");
-            PlntoEurRate = PlntoEurRate.Substring(15, 12);
-            PlntoEurRate = PlntoEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-			decimal Plnrate = Convert.ToDecimal(PlntoEurRate);
-			decimal amountEUR = number * Plnrate;
-            AddTransferPlntoEur(number, amountEUR);
-
-			return RedirectToAction("Index", "Home");
+			if (!decimal.TryParse(AmountPLN, out decimal numberr))
+			{
+				return RedirectToAction("ExChange", "Home");
+			}
+			else
+			{
+				decimal number = Convert.ToDecimal(AmountPLN);
+				//Klucz freecurrency
+				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+				string PlntoEurRate = fx.Latest("PLN", "EUR");
+				PlntoEurRate = PlntoEurRate.Substring(15, 12);
+				PlntoEurRate = PlntoEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				decimal Plnrate = Convert.ToDecimal(PlntoEurRate);
+				decimal amountEUR = number * Plnrate;
+				AddTransferPlntoEur(number, amountEUR);
+				return RedirectToAction("Index", "Home");
+			}
 		}
 	}
 }

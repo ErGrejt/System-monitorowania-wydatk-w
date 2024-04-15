@@ -1,36 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Rejestracja";
-    string error = ViewData["ErrorReg"] as string;
+﻿@model WebApplication1.Models.Users;
+@{
+	ViewData["Title"] = "Rejestracja";
+	string error = ViewData["ErrorReg"] as string;
 }
 <div class="test">
-    <form class="form-horizontal" method="post" action="@Url.Action("AddUser","Function")">
-        <fieldset class="Left">
+	<form class="form-horizontal" method="post" action="@Url.Action("AddUser","Function")">
+		<fieldset class="Left">
 
-        <legend>Rejestracja</legend>
-        <div class="errorlogin">@error</div>
-        
-        <div class="form-group">
-                <label class="col-md-4 control-label" for="Email">Email</label>
-            <div class="col-md-4">
-                    <input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md" required>
-            </div>
-        </div>
+			<legend>Rejestracja</legend>
+			<div class="errorlogin">@error</div>
 
-       
-        <div class="form-group">
-                <label class="col-md-4 control-label" for="password">Hasło</label>
-            <div class="col-md-4">
-                    <input id="password" name="password" type="password" class="form-control input-md" required>
-            </div>
-        </div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="Email">Email</label>
+				<div class="col-md-4">
+					<input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md" required>
+				</div>
+			</div>
 
-        <div class="form-group">
-            <div class="col-md-4">
-                <button id="LoginButton" name="LoginButton" class="btn btn-primary">Zarejestruj</button>
-                <br /><span>Masz już konto? <a class="logreg"  asp-controller="Home" asp-action="Login">Zaloguj się!</a></span>
-            </div>
-        </div>
 
-    </fieldset>
-</form>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="password">Hasło</label>
+				<div class="col-md-4">
+					<input id="password" name="password" type="password" class="form-control input-md" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-4">
+					<button id="LoginButton" name="LoginButton" class="btn btn-primary">Zarejestruj</button>
+					<br /><span>Masz już konto? <a class="logreg" asp-controller="Home" asp-action="Login">Zaloguj się!</a></span>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
 </div>
