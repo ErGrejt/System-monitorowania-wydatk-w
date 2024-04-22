@@ -85,14 +85,17 @@
 
 					</div>
 
-					@if (ViewContext.RouteData.Values["action"].ToString() != "Form" && ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register")
+					@if (ViewContext.RouteData.Values["action"].ToString() == "Index" || ViewContext.RouteData.Values["action"].ToString() == "ExChange" || 
+					ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" || 
+					ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
 					{
 						<div class="form">
 							<a class="navbar-brand-form" asp-area="" asp-controller="Home" asp-action="Form">Dodaj transakcje</a>
 						</div>
 
 					}
-					@if (BalanceData != null && BalanceData.Count > 0)
+					@if (BalanceData != null && BalanceData.Count > 0 || ViewContext.RouteData.Values["action"].ToString() == "Form" || 
+					ViewContext.RouteData.Values["action"].ToString() == "AddTransaction")
 					{
 
 
@@ -127,7 +130,14 @@
 			</div>
 			<div class="kontener footerright">
 
-				@if (ViewContext.RouteData.Values["action"].ToString() != "Login" && ViewContext.RouteData.Values["action"].ToString() != "Register")
+				@if (ViewContext.RouteData.Values["action"].ToString() == "Index" || 
+				ViewContext.RouteData.Values["action"].ToString() == "ExChange" || 
+				ViewContext.RouteData.Values["action"].ToString() == "Form" || 
+				ViewContext.RouteData.Values["action"].ToString() == "AddBalance" || 
+				ViewContext.RouteData.Values["action"].ToString() == "FormBalance" ||
+				ViewContext.RouteData.Values["action"].ToString() == "AddTransaction"  || 
+				ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" || 
+				ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
 				{
 					<a class="logreg" asp-area="" asp-controller="Function" asp-action="Logout">Wyloguj się</a>
 				}

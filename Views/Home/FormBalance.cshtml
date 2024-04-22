@@ -1,0 +1,50 @@
+﻿@{
+	ViewData["Title"] = "Formularz";
+}
+@using System.Data
+@model Balance;
+
+<div class="test">
+	<fieldset class="Right">
+		<form class="form-horizontal-first" method="post" action="@Url.Action("AddBalance","Function")">
+			<legend>
+				Dodaj swoje saldo PLN i EUR <br />
+				<a style="color:red; font-size:20px">Będziesz mógł to zrobić tylko raz!</a>
+			</legend>
+
+			<div class="form-group">
+				<label class="control-label" for="PLNSaldo">Saldo PLN</label>
+				<div>
+					<input id="PLN" name="PLN" type="text" placeholder="" class="input-md" required="">
+				</div>
+				<div class="validation-summary-errors">
+					@{
+						var PLNErrors = ViewData.ModelState["PLN"];
+						if (PLNErrors != null && PLNErrors.Errors != null && PLNErrors.Errors.Any())
+						{
+							<div>@PLNErrors.Errors.First().ErrorMessage</div>
+						}
+					}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label" for="EUROSaldo">Saldo EURO</label>
+				<div>
+					<input id="EURO" name="EURO" type="text" placeholder="" class="input-md" required="">
+				</div>
+				<div class="validation-summary-errors">
+					@{
+						var EuroErrors = ViewData.ModelState["EURO"];
+						if (EuroErrors != null && EuroErrors.Errors != null && EuroErrors.Errors.Any())
+						{
+							<div>@EuroErrors.Errors.First().ErrorMessage</div>
+						}
+					}
+				</div>
+			</div>
+			<br />
+			<input type="submit" value="Wyślij">
+		</form>
+	</fieldset>
+</div>

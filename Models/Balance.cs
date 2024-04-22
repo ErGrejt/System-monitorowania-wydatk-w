@@ -8,10 +8,12 @@ namespace WebApplication1.Models
 
         public int UserID { get; set; }
 		[Required(ErrorMessage = "Pole jest wymagane")]
-		[Range(0, (double)decimal.MaxValue, ErrorMessage = "Proszę wprowadzić prawidłową liczbę.")]
+		[IsDecimal(ErrorMessage = "Proszę wprowadzić prawidłową liczbę.")]
 		public decimal PLN { get; set; }
 		[Required(ErrorMessage = "Pole jest wymagane")]
-		[Range(0, (double)decimal.MaxValue, ErrorMessage = "Proszę wprowadzić prawidłową liczbę.")]
+		[IsDecimal(ErrorMessage = "Proszę wprowadzić prawidłową liczbę.")]
 		public decimal EURO { get; set;}
     }
+
+    
 }

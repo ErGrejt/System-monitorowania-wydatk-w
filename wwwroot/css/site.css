@@ -232,6 +232,7 @@ input[type="submit"]:hover {
 }
 .form-group {
     height: 75px;
+    position: relative;
 }
 .logreg {
     text-decoration: none;
@@ -256,4 +257,18 @@ input[type="submit"]:hover {
     align-content: center;
     color: red;
     font-size: 15px;
+}
+.validation-summary-errors {
+    
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+}
+.test {
+    text-align: center;
+}
+.ViewBagErrorExchange {
+    color: red;
+    font-weight: bold;
+
 }

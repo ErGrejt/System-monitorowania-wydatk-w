@@ -117,7 +117,7 @@ namespace WebApplication1.Controllers
 				_context.SaveChanges();
 				return RedirectToAction("Index", "Home");
 			}
-			return RedirectToAction("Index", "Home");
+			return View("/Views/Home/FormBalance.cshtml", model);
 		}
 		//Funkcje dodawania
 		public IActionResult AddTransferEurtoPln(decimal euramount, decimal plnafterexchange)
@@ -175,53 +175,35 @@ namespace WebApplication1.Controllers
 		[HttpPost]
 		public IActionResult AddUser(Users model)
 		{
+			// Sprawdź czy email jest unikalny
+			if (_context.Users.Any(p => p.Email == model.Email))
+			{
+				ModelState.AddModelError("Email", "Adres Email jest zajęty");
+				return View("/Views/Home/Register.cshtml", model); // Zwróć widok rejestracji z błędami
+			}
 			if (ModelState.IsValid)
 			{
-				if (IsValidEmail(model.Email))
+				// Tutaj możesz kontynuować operacje dodawania użytkownika, ponieważ model jest poprawny
+				string salt = BCrypt.Net.BCrypt.GenerateSalt();
+				string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password, salt);
+				Users newUser = new Users
 				{
-					if (!_context.Users.Any(p => p.Email == model.Email))
-					{
-						if (model.Password.Length >= 8)
-						{
-							string salt = BCrypt.Net.BCrypt.GenerateSalt();
-							string password = model.Password;
-							string hashed = BCrypt.Net.BCrypt.HashPassword(password, salt);
-							Users newUser = new Users
-							{
-								Email = model.Email,
-								Password = hashed
-							};
-							_context.Users.Add(newUser);
-							_context.SaveChanges();
-							return RedirectToAction("Login", "Home");
-						}
-						else
-						{
-							TempData["Email"] = "Hasło musi składac się z conajmniej 8 znaków";
-						}
-					} else
-					{
-						TempData["Email"] = "Adres Email jest zajęty";
-					}
-				} else
-				{
-					TempData["Email"] = "Nieprawidłowy Email";
-				}
+					Email = model.Email,
+					Password = hashed
+				};
+				_context.Users.Add(newUser);
+				_context.SaveChanges();
+				return RedirectToAction("Login", "Home");
 			}
 
-			return RedirectToAction("Register", "Home");
-		}
-		public bool IsValidEmail(string email)
-		{
-			string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
-			return Regex.IsMatch(email, pattern);
+			// Jeśli ModelState.IsValid nie jest prawdziwe, zwróć widok rejestracji z błędami
+			return View("/Views/Home/Register.cshtml", model);
 		}
 		[HttpPost]
 		public IActionResult CheckUser(UserLogin model)
 		{
 			if (ModelState.IsValid)
 			{
-
 				var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
 				if (user != null)
 				{
@@ -232,17 +214,15 @@ namespace WebApplication1.Controllers
 					}
 					else
 					{
-						TempData["error"] = "Nieprawidłowe hasło";
+						ModelState.AddModelError("Password", "Nieprawidłowe hasło");
 					}
-
 				}
 				else
 				{
-					TempData["error"] = "Nieprawidłowy adres e-mail";
+					ModelState.AddModelError("Email", "Nieprawidłowy adres Email");
 				}
 			}
-
-			return RedirectToAction("Login", "Home");
+			return View("/Views/Home/Login.cshtml", model);
 		}
 		public bool VerifyHashedPassword(string password, string hashedPassword)
 		{
@@ -278,7 +258,7 @@ namespace WebApplication1.Controllers
 				}
 				return RedirectToAction("index", "Home");
 			}
-			return RedirectToAction("Form", "Home");
+			return View("/Views/Home/Form.cshtml", model);
 		}
 
 		[HttpPost]
@@ -286,7 +266,8 @@ namespace WebApplication1.Controllers
 		{
 			if (!decimal.TryParse(AmountEur, out decimal number))
 			{
-				return RedirectToAction("ExChange", "Home");
+				ViewBag.Error = "Nieprawidłowa wartość liczbowa";
+				return View("Views/Home/ExChange.cshtml");
 			}
 			else
 			{
@@ -307,7 +288,8 @@ namespace WebApplication1.Controllers
 		{
 			if (!decimal.TryParse(AmountPLN, out decimal numberr))
 			{
-				return RedirectToAction("ExChange", "Home");
+				ViewBag.Error = "Nieprawidłowa wartość liczbowa";
+				return View("Views/Home/ExChange.cshtml");
 			}
 			else
 			{

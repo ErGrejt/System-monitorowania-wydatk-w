@@ -8,21 +8,36 @@
 		<fieldset class="Left">
 
 			<legend>Rejestracja</legend>
-			<div class="errorlogin">@error</div>
-
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="Email">Email</label>
 				<div class="col-md-4">
 					<input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md" required>
 				</div>
 			</div>
-
+			<div class="validation-summary-errors">
+				@{
+					var emailErrors = ViewData.ModelState["Email"];
+					if (emailErrors != null && emailErrors.Errors != null && emailErrors.Errors.Any())
+					{
+						<div>@emailErrors.Errors.First().ErrorMessage</div>
+					}
+				}
+			</div>
 
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="password">Hasło</label>
 				<div class="col-md-4">
 					<input id="password" name="password" type="password" class="form-control input-md" required>
 				</div>
+			</div>
+			<div class="validation-summary-errors">
+				@{
+					var PasswordErrors = ViewData.ModelState["Password"];
+					if (PasswordErrors != null && PasswordErrors.Errors != null && PasswordErrors.Errors.Any())
+					{
+						<div class="test">@PasswordErrors.Errors.First().ErrorMessage</div>
+					}
+				}
 			</div>
 
 			<div class="form-group">

@@ -103,8 +103,14 @@ namespace WebApplication1.Controllers
 				var BalanceData = _context.Balance
 							.Where(s => s.UserID == IDUser)
 							.ToList();
-				ViewData["BalanceData"] = BalanceData;
-				return View();
+				var RowCount = BalanceData.Count;
+				if(RowCount == 0)
+				{
+					return RedirectToAction("FormBalance", "Home");
+				} else
+				{
+					return View();
+				}
 			}
 			else
 			{
@@ -147,6 +153,11 @@ namespace WebApplication1.Controllers
 			ViewData["ErrorReg"] = errorregister;
 			return View();
 		}
+		public IActionResult FormBalance()
+		{
+			return View();
+		}
+
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
