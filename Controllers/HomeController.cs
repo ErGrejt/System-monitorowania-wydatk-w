@@ -16,13 +16,19 @@ namespace WebApplication1.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
-		private readonly AppDbContext _context;
+		private readonly ITransferRepository _transferRepository;
+		private readonly IFoodRepository _foodRepository;
+		private readonly IHealthRepository _healthRepository;
+		private readonly IOthersRepository _othersRepository;
+		private readonly IBalanceRepository _balanceRepository;
 
-		public HomeController(AppDbContext context, ILogger<HomeController> logger)
+		public HomeController(ITransferRepository transferRepository, IFoodRepository foodRepository, IHealthRepository healthRepository, IOthersRepository othersRepository, IBalanceRepository balanceRepository)
 		{
-			_context = context;
-			_logger = logger;
+			_transferRepository = transferRepository;
+			_foodRepository = foodRepository;
+			_healthRepository = healthRepository;
+			_othersRepository = othersRepository;
+			_balanceRepository = balanceRepository;
 		}
 
 		public IActionResult Index()
@@ -31,62 +37,28 @@ namespace WebApplication1.Controllers
 			{
 				int IDUser = (int)HttpContext.Session.GetInt32("UserId");
 				ViewData["ID"] = IDUser;
-				string connectionString = "Server=localhost;Database=System monitorowania wydatków;User=root;Password=;";
-				MySqlConnection connection = new MySqlConnection(connectionString);
-				connection.Open();
-				ViewData["TransferData"] = _context.Transfers.Where(p => p.UserID == IDUser).ToList();
-				ViewData["FoodData"] = _context.Food.Where(p => p.UserID == IDUser).ToList();
-				ViewData["HealthData"] = _context.Health.Where(p => p.UserID == IDUser).ToList();
-				ViewData["OthersData"] = _context.Others.Where(p => p.UserID == IDUser).ToList();
-				ViewData["BalanceData"] = _context.Balance.Where(p => p.UserID == IDUser).ToList();
-				ViewData["ExpensesOthers"] = _context.Others
-					.Where(z => z.Currency == 1 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesFood"] = _context.Food
-					.Where(z => z.Currency == 1 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesHealth"] = _context.Health
-					.Where(z => z.Currency == 1 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesOthersEur"] = _context.Others
-					.Where(z => z.Currency == 2 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesFoodEur"] = _context.Food
-					.Where(z => z.Currency == 2 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesHealthEur"] = _context.Health
-					.Where(z => z.Currency == 2 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesOutPln"] = _context.Transfers
-					.Where(z => z.Currency == 1 && z.Direction == 1 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesInPln"] = _context.Transfers
-					.Where(z => z.Currency == 1 && z.Direction == 2 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesOutEur"] = _context.Transfers
-					.Where(z => z.Currency == 2 && z.Direction == 1 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
-				ViewData["ExpensesInEur"] = _context.Transfers
-					.Where(z => z.Currency == 2 && z.Direction == 2 && z.UserID == IDUser)
-					.Select(z => z.Price)
-					.Sum();
+				ViewData["TransferData"] = _transferRepository.GetAll(IDUser);
+				ViewData["FoodData"] = _foodRepository.GetAll(IDUser);
+				ViewData["HealthData"] = _healthRepository.GetAll(IDUser);
+				ViewData["OthersData"] = _othersRepository.GetAll(IDUser);
+				ViewData["BalanceData"] = _balanceRepository.GetAll(IDUser);
+				ViewData["ExpensesOthers"] = _othersRepository.GetExpenses(IDUser,1);
+				ViewData["ExpensesFood"] = _foodRepository.GetExpenses(IDUser,1);
+				ViewData["ExpensesHealth"] = _healthRepository.GetExpenses(IDUser,1);
+				ViewData["ExpensesOthersEur"] = _othersRepository.GetExpenses(IDUser,2);
+				ViewData["ExpensesFoodEur"] = _foodRepository.GetExpenses(IDUser,2);
+				ViewData["ExpensesHealthEur"] = _healthRepository.GetExpenses(IDUser,2);
+				//Currency, Direction
+				ViewData["ExpensesOutPln"] = _transferRepository.GetExpenses(IDUser,1,1);
+				ViewData["ExpensesInPln"] = _transferRepository.GetExpenses(IDUser,1,2);
+				ViewData["ExpensesOutEur"] = _transferRepository.GetExpenses(IDUser,2,1);
+				ViewData["ExpensesInEur"] = _transferRepository.GetExpenses(IDUser,2,2);
 
-				connection.Close();
 				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
 				string Currencies = fx.Latest("EUR", "PLN");
 				Currencies = Currencies.Substring(15, 12);
 				Currencies = Currencies.Remove(1, 1).Insert(1, ",").Remove(4, 8);
 				ViewData["EuroRate"] = Currencies;
-
 				return View();
 			}
 			else
@@ -94,16 +66,13 @@ namespace WebApplication1.Controllers
 				return RedirectToAction("Login", "Home");
 			}
 		}
-
 		public IActionResult Form()
 		{
 			if (HttpContext.Session.GetInt32("UserId") != null)
 			{
 				var IDUser = (int)HttpContext.Session.GetInt32("UserId");
-				var BalanceData = _context.Balance
-							.Where(s => s.UserID == IDUser)
-							.ToList();
-				var RowCount = BalanceData.Count;
+				var BalanceData = _balanceRepository.GetAll(IDUser);
+				var RowCount = BalanceData.Count();
 				if(RowCount == 0)
 				{
 					return RedirectToAction("FormBalance", "Home");
@@ -133,7 +102,6 @@ namespace WebApplication1.Controllers
                 PlnToEurRate = PlnToEurRate.Substring(15, 12);
                 PlnToEurRate = PlnToEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
 				ViewData["PlnToEurRate"] = PlnToEurRate;
-
 				return View();
 			}
 			else
@@ -157,13 +125,10 @@ namespace WebApplication1.Controllers
 		{
 			return View();
 		}
-
-
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
-
 	}
 }

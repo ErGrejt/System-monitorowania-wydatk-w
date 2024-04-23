@@ -13,17 +13,26 @@ namespace WebApplication1.Controllers
 {
 	public class FunctionController : Controller
 	{
-		private readonly AppDbContext _context;
+		private readonly IFoodRepository _foodRepository;
+		private readonly IHealthRepository _healthRepository;
+		private readonly IOthersRepository _othersRepository;
+		private readonly ITransferRepository _transferRepository;
+		private readonly IBalanceRepository _balanceRepository;
+		private readonly IUserRepository _userRepository;
 
-
-		public FunctionController(AppDbContext context)
+		public FunctionController(IFoodRepository foodRepository,
+			IHealthRepository healthRepository, IOthersRepository othersRepository,
+			ITransferRepository transferRepository, IBalanceRepository balanceRepository ,
+			IUserRepository userRepository)
 		{
-			_context = context;
-
+			_foodRepository = foodRepository;
+			_healthRepository = healthRepository;
+			_othersRepository = othersRepository;
+			_transferRepository = transferRepository;
+			_balanceRepository = balanceRepository;
+			_userRepository = userRepository;
 		}
-
 		[HttpPost]
-		//Dodanie do tabeli Jedzenie
 		public IActionResult AddFood(FormData model)
 		{
 			if (ModelState.IsValid)
@@ -35,13 +44,11 @@ namespace WebApplication1.Controllers
 					Currency = model.Currency,
 					UserID = (int)HttpContext.Session.GetInt32("UserId")
 				};
-				_context.Food.Add(newFood);
-				_context.SaveChanges();
+				_foodRepository.Add(newFood);
 				return RedirectToAction("Index", "Home");
 			}
 			return RedirectToAction("Index", "Home");
 		}
-		//Dodanie do tabeli Zdrowie
 		public IActionResult AddHealth(FormData model)
 		{
 			if (ModelState.IsValid)
@@ -54,13 +61,11 @@ namespace WebApplication1.Controllers
 					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
 				};
-				_context.Health.Add(newHealth);
-				_context.SaveChanges();
+				_healthRepository.Add(newHealth);
 				return RedirectToAction("Index", "Home");
 			}
 			return RedirectToAction("Index", "Home");
 		}
-		//Dodanie do tabeli Rozne
 		public IActionResult AddOthers(FormData model)
 		{
 			if (ModelState.IsValid)
@@ -73,14 +78,11 @@ namespace WebApplication1.Controllers
 					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
 				};
-
-				_context.Others.Add(newOthers);
-				_context.SaveChanges();
+				_othersRepository.Add(newOthers);
 				return RedirectToAction("Index", "Home");
 			}
 			return RedirectToAction("Index", "Home");
 		}
-		//Dodanie do tabeli Przelewy
 		public IActionResult AddTransfer(FormData model)
 		{
 			if (ModelState.IsValid)
@@ -92,16 +94,12 @@ namespace WebApplication1.Controllers
 					Currency = model.Currency,
 					Direction = model.Who,
 					UserID = (int)HttpContext.Session.GetInt32("UserId")
-
 				};
-				_context.Transfers.Add(newTransfer);
-				_context.SaveChanges();
+				_transferRepository.Add(newTransfer);
 				return RedirectToAction("Index", "Home");
 			}
 			return RedirectToAction("Index", "Home");
 		}
-
-		//Dodanie do tabeli Saldo
 		public IActionResult AddBalance(Balance model)
 		{
 			if (ModelState.IsValid)
@@ -113,13 +111,11 @@ namespace WebApplication1.Controllers
 					UserID = (int)HttpContext.Session.GetInt32("UserId")
 
 				};
-				_context.Balance.Add(newBalance);
-				_context.SaveChanges();
+				_balanceRepository.Add(newBalance);
 				return RedirectToAction("Index", "Home");
 			}
 			return View("/Views/Home/FormBalance.cshtml", model);
 		}
-		//Funkcje dodawania
 		public IActionResult AddTransferEurtoPln(decimal euramount, decimal plnafterexchange)
 		{
 			Transfers newTransferExchangeEurMinus = new Transfers
@@ -138,12 +134,8 @@ namespace WebApplication1.Controllers
 				Direction = 2,
 				UserID = (int)HttpContext.Session.GetInt32("UserId")
 			};
-			_context.Transfers.Add(newTransferExchangeEurMinus);
-			_context.SaveChanges();
-			_context.Transfers.Add(newTransferExchangeOPlnPlus);
-			_context.SaveChanges();
-
-
+			_transferRepository.Add(newTransferExchangeEurMinus);
+			_transferRepository.Add(newTransferExchangeOPlnPlus);
 			return RedirectToAction("Index", "Home");
 		}
 		public IActionResult AddTransferPlntoEur(decimal plnamount, decimal eurafterexchange)
@@ -164,26 +156,20 @@ namespace WebApplication1.Controllers
 				Direction = 2,
 				UserID = (int)HttpContext.Session.GetInt32("UserId")
 			};
-			_context.Transfers.Add(newTransferPlnExchangeMinus);
-			_context.SaveChanges();
-			_context.Transfers.Add(newTransferEurExchangePlus);
-			_context.SaveChanges();
-
-
+			_transferRepository.Add(newTransferPlnExchangeMinus);
+			_transferRepository.Add(newTransferEurExchangePlus);
 			return RedirectToAction("Index", "Home");
 		}
 		[HttpPost]
 		public IActionResult AddUser(Users model)
 		{
-			// Sprawdź czy email jest unikalny
-			if (_context.Users.Any(p => p.Email == model.Email))
+			if (_userRepository.Any(p => p.Email == model.Email))
 			{
 				ModelState.AddModelError("Email", "Adres Email jest zajęty");
-				return View("/Views/Home/Register.cshtml", model); // Zwróć widok rejestracji z błędami
+				return View("/Views/Home/Register.cshtml", model);
 			}
 			if (ModelState.IsValid)
 			{
-				// Tutaj możesz kontynuować operacje dodawania użytkownika, ponieważ model jest poprawny
 				string salt = BCrypt.Net.BCrypt.GenerateSalt();
 				string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password, salt);
 				Users newUser = new Users
@@ -191,12 +177,9 @@ namespace WebApplication1.Controllers
 					Email = model.Email,
 					Password = hashed
 				};
-				_context.Users.Add(newUser);
-				_context.SaveChanges();
+				_userRepository.Add(newUser);
 				return RedirectToAction("Login", "Home");
 			}
-
-			// Jeśli ModelState.IsValid nie jest prawdziwe, zwróć widok rejestracji z błędami
 			return View("/Views/Home/Register.cshtml", model);
 		}
 		[HttpPost]
@@ -204,7 +187,7 @@ namespace WebApplication1.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+				var user = _userRepository.GetByEmail(model.Email);
 				if (user != null)
 				{
 					if (VerifyHashedPassword(model.Password, user.Password))
@@ -228,14 +211,12 @@ namespace WebApplication1.Controllers
 		{
 			return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
 		}
-
 		[HttpGet]
 		public IActionResult Logout()
 		{
 			HttpContext.Session.Remove("UserId");
 			return RedirectToAction("Login", "Home");
 		}
-
 		[HttpPost]
 		public IActionResult AddTransaction(FormData model)
 		{
@@ -260,7 +241,6 @@ namespace WebApplication1.Controllers
 			}
 			return View("/Views/Home/Form.cshtml", model);
 		}
-
 		[HttpPost]
 		public IActionResult AddEurExchange(string AmountEur)
 		{
