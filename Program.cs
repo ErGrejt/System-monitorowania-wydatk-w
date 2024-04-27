@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
 using Pomelo.EntityFrameworkCore.MySql;
 using WebApplication1.Controllers;
 using Microsoft.AspNetCore.Identity;

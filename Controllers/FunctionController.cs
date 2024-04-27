@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
 using WebApplication1.Controllers;
 using freecurrencyapi;
 using freecurrencyapi.Helpers;
@@ -116,50 +117,6 @@ namespace WebApplication1.Controllers
 			}
 			return View("/Views/Home/FormBalance.cshtml", model);
 		}
-		public IActionResult AddTransferEurtoPln(decimal euramount, decimal plnafterexchange)
-		{
-			Transfers newTransferExchangeEurMinus = new Transfers
-			{
-				Name = "Wymiana Eur->Pln",
-				Price = euramount,
-				Currency = 2,
-				Direction = 1,
-				UserID = (int)HttpContext.Session.GetInt32("UserId")
-			};
-			Transfers newTransferExchangeOPlnPlus = new Transfers
-			{
-				Name = "Wymiana Eur->Pln",
-				Price = plnafterexchange,
-				Currency = 1,
-				Direction = 2,
-				UserID = (int)HttpContext.Session.GetInt32("UserId")
-			};
-			_transferRepository.Add(newTransferExchangeEurMinus);
-			_transferRepository.Add(newTransferExchangeOPlnPlus);
-			return RedirectToAction("Index", "Home");
-		}
-		public IActionResult AddTransferPlntoEur(decimal plnamount, decimal eurafterexchange)
-		{
-			Transfers newTransferPlnExchangeMinus = new Transfers
-			{
-				Name = "Wymiana Pln->Eur",
-				Price = plnamount,
-				Currency = 1,
-				Direction = 1,
-				UserID = (int)HttpContext.Session.GetInt32("UserId")
-			};
-			Transfers newTransferEurExchangePlus = new Transfers
-			{
-				Name = "Wymiana Pln->Eur",
-				Price = eurafterexchange,
-				Currency = 2,
-				Direction = 2,
-				UserID = (int)HttpContext.Session.GetInt32("UserId")
-			};
-			_transferRepository.Add(newTransferPlnExchangeMinus);
-			_transferRepository.Add(newTransferEurExchangePlus);
-			return RedirectToAction("Index", "Home");
-		}
 		[HttpPost]
 		public IActionResult AddUser(Users model)
 		{
@@ -252,14 +209,8 @@ namespace WebApplication1.Controllers
 			else
 			{
 				decimal numberr = Convert.ToDecimal(AmountEur);
-				//Klucz freecurrency
-				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-				string EurtoPlnRate = fx.Latest("EUR", "PLN");
-				EurtoPlnRate = EurtoPlnRate.Substring(15, 12);
-				EurtoPlnRate = EurtoPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-				decimal Eurorate = Convert.ToDecimal(EurtoPlnRate);
-				decimal amountPLN = numberr * Eurorate;
-				AddTransferEurtoPln(numberr, amountPLN);
+				decimal exchangeamount = ConvertMoney(numberr, 1);
+				AddTransferExchange(numberr, exchangeamount, 2, 1,"Eur -> Pln");
 				return RedirectToAction("Index", "Home");
 			}
 		}
@@ -274,16 +225,51 @@ namespace WebApplication1.Controllers
 			else
 			{
 				decimal number = Convert.ToDecimal(AmountPLN);
-				//Klucz freecurrency
-				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-				string PlntoEurRate = fx.Latest("PLN", "EUR");
-				PlntoEurRate = PlntoEurRate.Substring(15, 12);
-				PlntoEurRate = PlntoEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
-				decimal Plnrate = Convert.ToDecimal(PlntoEurRate);
-				decimal amountEUR = number * Plnrate;
-				AddTransferPlntoEur(number, amountEUR);
+				decimal exchangeamount = ConvertMoney(number, 2);
+				AddTransferExchange(number, exchangeamount,1,2,"Pln -> Eur");
 				return RedirectToAction("Index", "Home");
 			}
+		}
+		public IActionResult AddTransferExchange(decimal amount, decimal afterexchange,
+			int fromCurrency, int toCurrency, string exchangeName)
+		{
+			int userID = (int)HttpContext.Session.GetInt32("UserId");
+			Transfers newTransferMinus = new Transfers
+			{
+				Name = exchangeName,
+				Price = amount,
+				Currency = fromCurrency,
+				Direction = 1,
+				UserID = userID
+			};
+			Transfers newTransferPlus = new Transfers
+			{
+				Name = exchangeName,
+				Price = afterexchange,
+				Currency = toCurrency,
+				Direction = 2,
+				UserID = userID
+			};
+			_transferRepository.Add(newTransferMinus);
+			_transferRepository.Add(newTransferPlus);
+			return RedirectToAction("Index", "Home");
+		}
+		public decimal ConvertMoney(decimal number,int who)
+		{
+			string rate;
+			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
+			if(who == 1)
+			{
+				rate = fx.Latest("EUR", "PLN");
+			} else
+			{
+				rate = fx.Latest("PLN", "EUR");
+			}
+			rate = rate.Substring(15, 12);
+			rate = rate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+			decimal rateconverted = Convert.ToDecimal(rate);
+			rateconverted = number * rateconverted;
+			return rateconverted;
 		}
 	}
 }
