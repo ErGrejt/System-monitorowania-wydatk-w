@@ -2,16 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
-using MySql.Data.MySqlClient;
 using System.Data;
-using System.Linq;
-using WebApplication1.Controllers;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Net.Http;
-using System.Text.Json;
-using freecurrencyapi;
-using freecurrencyapi.Helpers;
-using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1.Controllers
 {
@@ -43,17 +34,17 @@ namespace WebApplication1.Controllers
 				ViewData["HealthData"] = _healthRepository.GetAll(IDUser);
 				ViewData["OthersData"] = _othersRepository.GetAll(IDUser);
 				ViewData["BalanceData"] = _balanceRepository.GetAll(IDUser);
-				ViewData["ExpensesOthers"] = _othersRepository.GetExpenses(IDUser,1);
-				ViewData["ExpensesFood"] = _foodRepository.GetExpenses(IDUser,1);
-				ViewData["ExpensesHealth"] = _healthRepository.GetExpenses(IDUser,1);
-				ViewData["ExpensesOthersEur"] = _othersRepository.GetExpenses(IDUser,2);
-				ViewData["ExpensesFoodEur"] = _foodRepository.GetExpenses(IDUser,2);
-				ViewData["ExpensesHealthEur"] = _healthRepository.GetExpenses(IDUser,2);
+				ViewData["ExpensesOthers"] = _othersRepository.GetExpenses(IDUser, 1);
+				ViewData["ExpensesFood"] = _foodRepository.GetExpenses(IDUser, 1);
+				ViewData["ExpensesHealth"] = _healthRepository.GetExpenses(IDUser, 1);
+				ViewData["ExpensesOthersEur"] = _othersRepository.GetExpenses(IDUser, 2);
+				ViewData["ExpensesFoodEur"] = _foodRepository.GetExpenses(IDUser, 2);
+				ViewData["ExpensesHealthEur"] = _healthRepository.GetExpenses(IDUser, 2);
 				//Currency, Direction
-				ViewData["ExpensesOutPln"] = _transferRepository.GetExpenses(IDUser,1,1);
-				ViewData["ExpensesInPln"] = _transferRepository.GetExpenses(IDUser,1,2);
-				ViewData["ExpensesOutEur"] = _transferRepository.GetExpenses(IDUser,2,1);
-				ViewData["ExpensesInEur"] = _transferRepository.GetExpenses(IDUser,2,2);
+				ViewData["ExpensesOutPln"] = _transferRepository.GetExpenses(IDUser, 1, 1);
+				ViewData["ExpensesInPln"] = _transferRepository.GetExpenses(IDUser, 1, 2);
+				ViewData["ExpensesOutEur"] = _transferRepository.GetExpenses(IDUser, 2, 1);
+				ViewData["ExpensesInEur"] = _transferRepository.GetExpenses(IDUser, 2, 2);
 
 				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
 				string Currencies = fx.Latest("EUR", "PLN");
@@ -74,10 +65,11 @@ namespace WebApplication1.Controllers
 				var IDUser = (int)HttpContext.Session.GetInt32("UserId");
 				var BalanceData = _balanceRepository.GetAll(IDUser);
 				var RowCount = BalanceData.Count();
-				if(RowCount == 0)
+				if (RowCount == 0)
 				{
 					return RedirectToAction("FormBalance", "Home");
-				} else
+				}
+				else
 				{
 					return View();
 				}
@@ -93,15 +85,15 @@ namespace WebApplication1.Controllers
 			{
 				//Klucz freecurrency
 				var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-				
+
 				string EurToPlnRate = fx.Latest("EUR", "PLN");
-                EurToPlnRate = EurToPlnRate.Substring(15, 12);
-                EurToPlnRate = EurToPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				EurToPlnRate = EurToPlnRate.Substring(15, 12);
+				EurToPlnRate = EurToPlnRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
 				ViewData["EurToPlnRate"] = EurToPlnRate;
-				
+
 				string PlnToEurRate = fx.Latest("PLN", "EUR");
-                PlnToEurRate = PlnToEurRate.Substring(15, 12);
-                PlnToEurRate = PlnToEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
+				PlnToEurRate = PlnToEurRate.Substring(15, 12);
+				PlnToEurRate = PlnToEurRate.Remove(1, 1).Insert(1, ",").Remove(4, 8);
 				ViewData["PlnToEurRate"] = PlnToEurRate;
 				return View();
 			}

@@ -1,5 +1,4 @@
 ﻿@using System.Data
-
 @{
 	var BalanceData = ViewData["BalanceData"] as List<Balance>;
 	decimal BalanceLast = 0;
@@ -7,18 +6,13 @@
 	decimal wealth = 0;
 	string EuroRateString = "";
 	string result = "";
-
-
 	if (ViewContext.RouteData.Values["action"].ToString() != "ExChange")
 	{
-
-
 		if (ViewData["BalanceData"] != null && BalanceData.Count > 0 && ViewData["ExpensesOthers"] != null && ViewData["ExpensesFood"]
 		!= null && ViewData["ExpensesHealth"] != null && ViewData["ExpensesHealthEur"] != null && ViewData["ExpensesFoodEur"]
 		!= null && ViewData["ExpensesOthersEur"] != null && ViewData["ExpensesOutPln"] != null && ViewData["ExpensesInPln"] != null
 		&& ViewData["ExpensesOutEur"] != null && ViewData["ExpensesInEur"] != null)
 		{
-
 			decimal Balance = (decimal)BalanceData[0].PLN;
 			decimal BalanceEur = (decimal)BalanceData[0].EURO;
 			decimal ExpensesOthers = (decimal)ViewData["ExpensesOthers"];
@@ -29,12 +23,7 @@
 			decimal ExpensesFoodEur = (decimal)ViewData["ExpensesFoodEur"];
 			decimal ExpensesHealthEur = (decimal)ViewData["ExpensesHealthEur"];
 			EuroRateString = (string)ViewData["EuroRate"];
-
-
-
 			decimal EuroRate = Convert.ToDecimal(EuroRateString);
-
-			
 			decimal ExpensesOutPln = (decimal)ViewData["ExpensesOutPln"];
 			decimal ExpensesInPln = (decimal)ViewData["ExpensesInPln"];
 			decimal ExpensesOutEur = (decimal)ViewData["ExpensesOutEur"];
@@ -42,13 +31,11 @@
 			BalanceLast = Balance - ExpensesOthers - ExpensesFood - ExpensesHealth + ExpensesInPln - ExpensesOutPln;
 			BalanceLastEur = BalanceEur - ExpensesOthersEur - ExpensesFoodEur
 			- ExpensesHealthEur + ExpensesInEur - ExpensesOutEur;
-
 			wealth = BalanceLast + BalanceLastEur * EuroRate;
 			result = wealth.ToString("0.00");
 		}
 	}
 }
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -85,17 +72,17 @@
 
 					</div>
 
-					@if (ViewContext.RouteData.Values["action"].ToString() == "Index" || ViewContext.RouteData.Values["action"].ToString() == "ExChange" || 
-					ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" || 
-					ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
+					@if (ViewContext.RouteData.Values["action"].ToString() == "Index" || ViewContext.RouteData.Values["action"].ToString() == "ExChange" ||
+										ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" ||
+										ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
 					{
 						<div class="form">
 							<a class="navbar-brand-form" asp-area="" asp-controller="Home" asp-action="Form">Dodaj transakcje</a>
 						</div>
 
 					}
-					@if (BalanceData != null && BalanceData.Count > 0 || ViewContext.RouteData.Values["action"].ToString() == "Form" || 
-					ViewContext.RouteData.Values["action"].ToString() == "AddTransaction")
+					@if (BalanceData != null && BalanceData.Count > 0 || ViewContext.RouteData.Values["action"].ToString() == "Form" ||
+										ViewContext.RouteData.Values["action"].ToString() == "AddTransaction")
 					{
 
 
@@ -115,14 +102,12 @@
 				</div>
 			</div>
 		</nav>
-
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
 			@RenderBody()
 		</main>
 	</div>
-
 	<footer class="border-top footer text-muted">
 		<div class="myfooter">
 			<div class="kontener footerleft">
@@ -130,23 +115,19 @@
 			</div>
 			<div class="kontener footerright">
 
-				@if (ViewContext.RouteData.Values["action"].ToString() == "Index" || 
-				ViewContext.RouteData.Values["action"].ToString() == "ExChange" || 
-				ViewContext.RouteData.Values["action"].ToString() == "Form" || 
-				ViewContext.RouteData.Values["action"].ToString() == "AddBalance" || 
-				ViewContext.RouteData.Values["action"].ToString() == "FormBalance" ||
-				ViewContext.RouteData.Values["action"].ToString() == "AddTransaction"  || 
-				ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" || 
-				ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
+				@if (ViewContext.RouteData.Values["action"].ToString() == "Index" ||
+									ViewContext.RouteData.Values["action"].ToString() == "ExChange" ||
+									ViewContext.RouteData.Values["action"].ToString() == "Form" ||
+									ViewContext.RouteData.Values["action"].ToString() == "AddBalance" ||
+									ViewContext.RouteData.Values["action"].ToString() == "FormBalance" ||
+									ViewContext.RouteData.Values["action"].ToString() == "AddTransaction" ||
+									ViewContext.RouteData.Values["action"].ToString() == "AddPlnExchange" ||
+									ViewContext.RouteData.Values["action"].ToString() == "AddEurExchange")
 				{
 					<a class="logreg" asp-area="" asp-controller="Function" asp-action="Logout">Wyloguj się</a>
 				}
-
-
-
 			</div>
 		</div>
-
 	</footer>
 	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

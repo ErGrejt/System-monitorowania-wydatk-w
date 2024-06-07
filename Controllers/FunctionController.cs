@@ -1,14 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
-using WebApplication1.Controllers;
-using freecurrencyapi;
-using freecurrencyapi.Helpers;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Crypto.Generators;
-using BCrypt.Net;
-using System.Text.RegularExpressions;
+
 
 namespace WebApplication1.Controllers
 {
@@ -23,7 +16,7 @@ namespace WebApplication1.Controllers
 
 		public FunctionController(IFoodRepository foodRepository,
 			IHealthRepository healthRepository, IOthersRepository othersRepository,
-			ITransferRepository transferRepository, IBalanceRepository balanceRepository ,
+			ITransferRepository transferRepository, IBalanceRepository balanceRepository,
 			IUserRepository userRepository)
 		{
 			_foodRepository = foodRepository;
@@ -210,7 +203,7 @@ namespace WebApplication1.Controllers
 			{
 				decimal numberr = Convert.ToDecimal(AmountEur);
 				decimal exchangeamount = ConvertMoney(numberr, 1);
-				AddTransferExchange(numberr, exchangeamount, 2, 1,"Eur -> Pln");
+				AddTransferExchange(numberr, exchangeamount, 2, 1, "Eur -> Pln");
 				return RedirectToAction("Index", "Home");
 			}
 		}
@@ -226,7 +219,7 @@ namespace WebApplication1.Controllers
 			{
 				decimal number = Convert.ToDecimal(AmountPLN);
 				decimal exchangeamount = ConvertMoney(number, 2);
-				AddTransferExchange(number, exchangeamount,1,2,"Pln -> Eur");
+				AddTransferExchange(number, exchangeamount, 1, 2, "Pln -> Eur");
 				return RedirectToAction("Index", "Home");
 			}
 		}
@@ -254,14 +247,15 @@ namespace WebApplication1.Controllers
 			_transferRepository.Add(newTransferPlus);
 			return RedirectToAction("Index", "Home");
 		}
-		public decimal ConvertMoney(decimal number,int who)
+		public decimal ConvertMoney(decimal number, int who)
 		{
 			string rate;
 			var fx = new FreeCurrencyApi("fca_live_ivHc8n89DK5t3yqGMryyu2RO2vzyxLV2zuQYg51T");
-			if(who == 1)
+			if (who == 1)
 			{
 				rate = fx.Latest("EUR", "PLN");
-			} else
+			}
+			else
 			{
 				rate = fx.Latest("PLN", "EUR");
 			}

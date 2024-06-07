@@ -6,11 +6,8 @@
 
 <div class="test">
 	<fieldset class="Left">
-
 		<form class="form-horizontal" method="post" action="@Url.Action("AddTransaction","Function")">
 			<legend>@ViewBag.AmountPLN</legend>
-
-
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="Name">Nazwa</label>
 				<div class="col-md-4">
@@ -26,13 +23,9 @@
 					}
 				}
 			</div>
-
 			<div class="form-group">
-
-
 				<label id="CenaID" class="col-md-4 control-label" for="Price">Cena</label>
 				<label id="KwotaID" class="col-md-4 control-label" for="Price">Kwota przelewu</label>
-
 				<div class="col-md-4">
 					<input id="Price" name="Price" type="text" placeholder="0,00" class="form-control input-md" required="">
 				</div>
@@ -46,7 +39,6 @@
 					}
 				}
 			</div>
-
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="Currency">Waluta</label>
 				<div class="col-md-4">
@@ -64,8 +56,6 @@
 					</div>
 				</div>
 			</div>
-
-
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="Category">Kategoria</label>
 				<div class="col-md-4">
@@ -77,9 +67,6 @@
 					</select>
 				</div>
 			</div>
-
-
-
 			<div id="directionDiv" class="form-group">
 				<label class="col-md-4 control-label" for="Who">Kierunek przelewu</label>
 				<div class="col-md-4">
@@ -98,7 +85,6 @@
 				</div>
 			</div>
 			<input class="formbutton" type="submit" value="Wyślij">
-
 		</form>
 	</fieldset>
 </div>
@@ -120,11 +106,7 @@
 			directionDiv.classList.add("testform");
 		}
 	}
-
-
 	document.getElementById("Category").addEventListener("change", manageVisibility);
-
-
 	manageVisibility();
 </script>
 

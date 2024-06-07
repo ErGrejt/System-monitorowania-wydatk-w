@@ -4,7 +4,6 @@ namespace WebApplication1.Models
 {
     public class Users
     {
-
         public int Id { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane")]
         [EmailAddress(ErrorMessage = "Nieprawidłowy adres Email")]

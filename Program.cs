@@ -1,17 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 using WebApplication1.Repositories;
-using Pomelo.EntityFrameworkCore.MySql;
 using WebApplication1.Controllers;
-using Microsoft.AspNetCore.Identity;
-
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<FunctionController>();
-//Add RepositoryPatterns
+
 builder.Services.AddScoped<ITransferRepository, TransferRepository>();
 builder.Services.AddScoped<IFoodRepository, FoodRepository>();
 builder.Services.AddScoped<IHealthRepository, HealthRepository>();

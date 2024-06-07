@@ -1,59 +1,52 @@
 ﻿@using System.Data
 @model WebApplication1.Models.UserLogin;
 @{
-    ViewData["Title"] = "Logowanie";
-    string error = ViewData["Error"] as string;
+	ViewData["Title"] = "Logowanie";
+	string error = ViewData["Error"] as string;
 }
 <div class="test">
-    <form class="form-horizontal" method="post" action="@Url.Action("CheckUser","Function")">
-        <fieldset class="Left">
-
-            
-            <legend>Logowanie</legend>
-            
-               <div class="errorlogin">@error</div>
-            
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="Email">Email</label>
-                <div class="col-md-4">
-                    <input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md" required>
-                </div>
-            </div>
-            <div class="validation-summary-errors">
-                @{
-                    var LoginErrors = ViewData.ModelState["Email"];
-                    if (LoginErrors != null && LoginErrors.Errors != null && LoginErrors.Errors.Any())
-                    {
-                        <div class="test">@LoginErrors.Errors.First().ErrorMessage</div>
-                    }
-                }
-            </div>
-            
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="Password">Hasło</label>
-                <div class="col-md-4">
-                    <input id="Password" name="Password" type="password" class="form-control input-md" required>
-                </div>
-            </div>
-            <div class="validation-summary-errors">
-                @{
-                    var PasswordErrors = ViewData.ModelState["Password"];
-                    if (PasswordErrors != null && PasswordErrors.Errors != null && PasswordErrors.Errors.Any())
-                    {
-                        <div class="test">@PasswordErrors.Errors.First().ErrorMessage</div>
-                    }
-                }
-            </div>
-            
-            <div class="form-group">
-                <div class="col-md-4">
-                    <button id="LoginButton" name="LoginButton" class="btn btn-primary">Zaloguj</button>
-                    <br /><span>Nie masz konta? <a class="logreg"  asp-controller="Home" asp-action="Register">Zarejestruj się!</a></span>
-                </div>
-            </div>
-
-        </fieldset>
-    </form>
+	<form class="form-horizontal" method="post" action="@Url.Action("CheckUser","Function")">
+		<fieldset class="Left">
+			<legend>Logowanie</legend>
+			<div class="errorlogin">@error</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="Email">Email</label>
+				<div class="col-md-4">
+					<input id="Email" name="Email" type="text" placeholder="email" class="form-control input-md" required>
+				</div>
+			</div>
+			<div class="validation-summary-errors">
+				@{
+					var LoginErrors = ViewData.ModelState["Email"];
+					if (LoginErrors != null && LoginErrors.Errors != null && LoginErrors.Errors.Any())
+					{
+						<div class="test">@LoginErrors.Errors.First().ErrorMessage</div>
+					}
+				}
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="Password">Hasło</label>
+				<div class="col-md-4">
+					<input id="Password" name="Password" type="password" class="form-control input-md" required>
+				</div>
+			</div>
+			<div class="validation-summary-errors">
+				@{
+					var PasswordErrors = ViewData.ModelState["Password"];
+					if (PasswordErrors != null && PasswordErrors.Errors != null && PasswordErrors.Errors.Any())
+					{
+						<div class="test">@PasswordErrors.Errors.First().ErrorMessage</div>
+					}
+				}
+			</div>
+			<div class="form-group">
+				<div class="col-md-4">
+					<button id="LoginButton" name="LoginButton" class="btn btn-primary">Zaloguj</button>
+					<br /><span>Nie masz konta? <a class="logreg" asp-controller="Home" asp-action="Register">Zarejestruj się!</a></span>
+				</div>
+			</div>
+		</fieldset>
+	</form>
 </div>
 
 

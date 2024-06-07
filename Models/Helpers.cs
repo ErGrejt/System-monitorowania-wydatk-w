@@ -1,18 +1,11 @@
 ﻿using System.Net;
-using System;
-using System.Net;
-using freecurrencyapi;
 
 namespace WebApplication1.Models
 {
     public class RequestHelpers
     {
         public const string BaseUrl = "https://api.freecurrencyapi.com/v1/";
-
-        public RequestHelpers()
-        {
-        }
-
+        public RequestHelpers() { }
         public static string Status(string apiKey = null)
         {
             string url;
@@ -20,7 +13,6 @@ namespace WebApplication1.Models
 
             return GetResponse(url);
         }
-
         public static string Currencies(string apiKey, string currencies)
         {
             string url;
@@ -28,7 +20,6 @@ namespace WebApplication1.Models
 
             return GetResponse(url);
         }
-
         public static string Latest(string apiKey, string baseCurrency, string currencies)
         {
             string url;
@@ -36,7 +27,6 @@ namespace WebApplication1.Models
 
             return GetResponse(url);
         }
-
         public static string Historical(string apiKey, string date, string baseCurrency, string currencies)
         {
             string url;
@@ -44,11 +34,9 @@ namespace WebApplication1.Models
 
             return GetResponse(url);
         }
-
         private static string GetResponse(string url)
         {
             string jsonString;
-
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
@@ -74,8 +62,6 @@ namespace WebApplication1.Models
                     }
                 }
             }
-
-
             return jsonString;
         }
     }

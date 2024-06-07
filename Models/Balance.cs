@@ -13,6 +13,4 @@ namespace WebApplication1.Models
 		[Range(0, double.MaxValue, ErrorMessage = "Wpisz poprawną liczbę")]
 		public decimal EURO { get; set;}
     }
-
-    
 }
